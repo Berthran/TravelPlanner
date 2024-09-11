@@ -19,4 +19,4 @@ Travel Planner is a handy tool to get travellers up to speed with travel prepara
   - Wiseman Umanah
   - Gilbert Henyo
   - Castro Omondi
-  - Oluwamayowa Mustapha
+  - Oluwamayowa Musa
