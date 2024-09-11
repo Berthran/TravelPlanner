@@ -2,7 +2,7 @@
 
 import React, {
     useState,
-    useEffect
+    // useEffect
 } from 'react'
 import Navbar from '../components/Navbar'
 import RecCard from "../components/RecCard"
@@ -26,16 +26,16 @@ const Home = () => {
     });
 
 
-    useEffect(() => {
-        getPlaces();
-    }, [value])
+    // useEffect(() => {
+    //     getPlaces();
+    // }, [value])
 
-    const getPlaces = async () => {
-        const promise = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${value}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
-        const data = await promise.json();
-        setPlaces(data.features);
-        console.log(data)
-    }
+    // const getPlaces = async () => {
+    //     const promise = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${value}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+    //     const data = await promise.json();
+    //     setPlaces(data.features);
+    //     console.log(data)
+    // }
 
     const handleClick = (query) => {
         setValue(query.place_name)
