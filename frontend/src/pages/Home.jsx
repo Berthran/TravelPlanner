@@ -2,7 +2,7 @@
 
 import React, {
     useState,
-    // useEffect
+    useEffect
 } from 'react'
 import Navbar from '../components/Navbar'
 import RecCard from "../components/RecCard"
