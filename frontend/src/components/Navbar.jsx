@@ -19,7 +19,7 @@ const Navbar = () => {
     return (
         <div className='navContainer'>
             <Link to="/">
-                <p className='navLogo'>JourneyDash</p>
+                <p className='navLogo'>TravelPlanner</p>
             </Link>
 
             <input type="checkbox" id='menu-bar' />
