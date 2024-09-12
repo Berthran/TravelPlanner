@@ -67,41 +67,40 @@
         }
 
         .plan-trip-container {
-            h1 {
-                text-align: center;
-                font-family: var(--cursive);
+          width: 800px;
+          padding: 20px;
+        
+          .plan-input {
+            padding: 15px 15px 15px 50px;
+            margin: 20px;
+            
+            input {
+              border: none;
+              font-size: 1.2rem;
+              padding: 5px;
+              margin-left: 10px;
+              font-family: "Quicksand", sans-serif;
             }
-
-            width: 800px;
-            padding: 20px;
-
-            .plan-input {
-                padding: 15px 15px 15px 50px;
-                margin: 20px;
-
-                input {
-                    border: none;
-                    font-size: 1.2rem;
-                    padding: 5px;
-                    margin-left: 10px;
-                    font-family: "Quicksand", sans-serif;
-                    ;
-                }
-            }
-
-            /* Alternate background colors */
-            .plan-input:nth-child(odd) {
-                background-color: var(--light-blue);
-            }
-
-            .plan-input:nth-child(even) {
-                background-color: var(--light-pink);
-            }
-
-            h3,
-            h2 {
-                text-align: center;
-            }
+          }
+        
+          .plan-input:nth-child(odd) {
+            background-color: var(--light-blue);
+          }
+        
+          .plan-input:nth-child(even) {
+            background-color: var(--light-pink);
+          }
+        
+          // Declaring h1, h3, h2 after the nested rules (this is likely causing the issue)
+          h1 {
+            text-align: center;
+            font-family: var(--cursive);
+          }
+        
+          h3, h2 {
+            text-align: center;
+          }
         }
+               
     }
 }
