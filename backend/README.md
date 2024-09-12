@@ -6,14 +6,14 @@
 ## Available Endpoints
 ### `/register`
 Register the user to be able to  the service. User information required:
- > **Name**
- > **Username**
- > **Email**
- > **Password**
+ - **Name**
+ - **Username**
+ - **Email**
+ - **Password**
 ### `/login`
 Log the user in to have access to service. User information required:
- > **username**
- > **Password**
+ - **username**
+ - **Password**
 ### `/dashboard`
 Shows the planned trips.
 ### `/place`
