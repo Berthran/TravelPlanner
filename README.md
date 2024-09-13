@@ -45,7 +45,7 @@ cd TravelPlaner
 
 - create a virtual environment and activate it
 ```sh
-python3 -m venv .venv`
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -56,7 +56,7 @@ cd backend
 
 - install required packages
 ```sh
-pip3 install -r requirements.txt`
+pip3 install -r requirements.txt
 ```
 
 - setup up your .env keys
@@ -69,7 +69,7 @@ cat db_prep.sql | sudo mysql
 
 - run code
 ```sh
-python3 -m api.v1.app`
+python3 -m api.v1.app
 ```
 
 access swagger file at
