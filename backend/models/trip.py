@@ -15,12 +15,13 @@ class Trip(BaseModel, Base):
 	city_name = Column(String(128), nullable=False)
 	latitude = Column(Float)
 	longitude = Column(Float)
-
+	description = Column(String(1024))
+	keywords = Column(String(500))
 	user_id = Column(String(100), ForeignKey('users.id'), nullable=False)
 
-	users = relationship("User", back_populates="trips")
+	user = relationship("User", back_populates="trips")
 
-	weathers = relationship("Weather", back_populates="trips")
+	weathers = relationship("Weather", back_populates="trip")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

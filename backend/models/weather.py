@@ -19,7 +19,7 @@ class Weather(BaseModel, Base):
 
 	trip_id = Column(String(100), ForeignKey('trips.id'), nullable=False)
 
-	trips = relationship("Trip", back_populates="weathers")
+	trip = relationship("Trip", back_populates="weathers")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
