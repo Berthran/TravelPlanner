@@ -37,25 +37,40 @@ AI_KEY=AIzaSyB.... (create one from Gemini API)
 
 
 ## STEPS to run 
-- create virtual environment
+- clone the repository and `cd` to the repo
+```sh
+git clone https://github.com:Berthran/TravelPlanner.git
+cd TravelPlaner
+```
 
-`python3 -m venv .venv`
+- create a virtual environment and activate it
+```sh
+python3 -m venv .venv`
+source .venv/bin/activate
+```
 
-- install packages
+- `cd` to `backend`
+```sh
+cd backend
+```
 
-`pip3 install -r requirements.txt`
+- install required packages
+```sh
+pip3 install -r requirements.txt`
+```
 
 - setup up your .env keys
-- setup database, run:
 
-```
+- setup database, run:
+```sh
 sudo service mysql start
 cat db_prep.sql | sudo mysql
 ```
 
 - run code
-
-`python3 -m api.v1.app`
+```sh
+python3 -m api.v1.app`
+```
 
 access swagger file at
 `/swagger`
