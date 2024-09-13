@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Weather Model to handle users"""
-from backend.models.base import BaseModel, Base
+from models.base import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 

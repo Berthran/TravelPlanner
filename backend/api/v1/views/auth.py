@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Module handles all authentications"""
 from api.v1.views import app_views
-from backend.models.user import User
-from backend.models import storage
+from models.user import User
+from models import storage
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, create_refresh_token, jwt_required
 

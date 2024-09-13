@@ -2,10 +2,10 @@
 """Database Storage Engine"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from backend.models.base import Base
-from backend.models.trip import Trip
-from backend.models.user import User
-from backend.models.weather import Weather
+from models.base import Base
+from models.trip import Trip
+from models.user import User
+from models.weather import Weather
 from os import getenv
 from dotenv import load_dotenv
 
@@ -29,6 +29,8 @@ class DBStorage:
         DB_PORT = getenv('DB_PORT', '3306')
         DB_NAME = getenv('DB_NAME')
 
+        database_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+        print(database_url)
         self.__engine = create_engine(
             f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
         )
