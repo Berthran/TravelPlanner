@@ -20,3 +20,17 @@ Travel Planner is a handy tool to get travellers up to speed with travel prepara
   - Gilbert Henyo
   - Castro Omondi
   - Oluwamayowa Mustapha
+
+
+## EXAMPLE OF DATA EXPECTED IN THE .ENV file
+
+DB_PORT=3306
+DB_USER=traveller
+DB_PASSWORD=traveller
+DB_NAME=travel_planner
+DB_HOST=localhost
+SECRET_KEY=traveller (can be any unique key)
+LOCATION_API_URL=https://api.openweathermap.org/geo/1.0/direct
+WEATHER_KEY=befa9540 (create one from the openweathermap api)
+WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
+AI_KEY=AIzaSyB.... (create one from Gemini API)
