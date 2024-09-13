@@ -9,3 +9,4 @@ storage.reload()
 # Import models here to avoid circular imports
 from backend.models.user import User
 from backend.models.trip import Trip
+from backend.models.weather import Weather

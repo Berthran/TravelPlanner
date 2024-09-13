@@ -13,17 +13,14 @@ class Trip(BaseModel, Base):
 	"""
 	__tablename__ = 'trips'
 	city_name = Column(String(128), nullable=False)
-	country = Column(String(128))
-	state_code = Column(Integer)
-	country_code = Column(Integer)
 	latitude = Column(Float)
 	longitude = Column(Float)
 
-	user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+	user_id = Column(String(100), ForeignKey('users.id'), nullable=False)
 
-	user = relationship("User", back_populates="trips")
+	users = relationship("User", back_populates="trips")
 
-	weather = relationship("Weather", back_populates="trips")
+	weathers = relationship("Weather", back_populates="trips")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

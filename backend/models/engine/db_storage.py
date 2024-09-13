@@ -5,13 +5,14 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from backend.models.base import Base
 from backend.models.trip import Trip
 from backend.models.user import User
+from backend.models.weather import Weather
 from os import getenv
 from dotenv import load_dotenv
 
 
 load_dotenv()
 
-classes = {"User": User, "Trip": Trip}
+classes = {"User": User, "Trip": Trip, "Weather": Weather}
 
 
 class DBStorage:
@@ -94,7 +95,7 @@ class DBStorage:
         Returns:
             object: the user object
         """
-        return self.__session.query(User).filter_by(_email=email).first()
+        return self.__session.query(User).filter_by(_User__email=email).first()
 
     def get(self, cls, id):
         """Returns the object based on class name and ID

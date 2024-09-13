@@ -17,6 +17,13 @@ class Weather(BaseModel, Base):
 	wind_speed = Column(Float, nullable=False)
 	humidity = Column(Float, nullable=False)
 
-	trip_id = Column(Integer, ForeignKey('trips.id'), nullable=False)
+	trip_id = Column(String(100), ForeignKey('trips.id'), nullable=False)
 
-	trip = relationship("Trip", back_populates="weathers")
+	trips = relationship("Trip", back_populates="weathers")
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		if kwargs:
+			for key, value in kwargs.items():
+				if key != "__class__" and hasattr(self, key):
+					setattr(self, key, value)

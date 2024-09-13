@@ -32,7 +32,7 @@ class User(BaseModel, Base):
 	@property
 	def password(self):
 		"""Retrieves the users password"""
-		return self.password
+		return self.__password
 
 	@password.setter
 	def password(self, value: str):
@@ -41,7 +41,7 @@ class User(BaseModel, Base):
 		Args:
 			value (str): the new password of user
 		"""
-		self.password = generate_password_hash(value)
+		self.__password = generate_password_hash(value)
 
 	def check_password(self, password):
 		"""Validate user's password
@@ -52,12 +52,12 @@ class User(BaseModel, Base):
 		Returns:
 			bool: True | False
 		"""
-		return check_password_hash(self._password, password)
+		return check_password_hash(self.__password, password)
 
 	@property
 	def email(self):
 		"""Retrieves user email"""
-		return self._email
+		return self.__email
 
 	@email.setter
 	def email(self, value: str):
@@ -71,12 +71,15 @@ class User(BaseModel, Base):
 		"""
 		regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
 		if re.match(regex, value):
-			self._email = value
+			self.__email = value
 		else:
 			raise ValueError('Invalid Email')
 
-	def from_dict(self):
+	def to_dict(self):
 		"""Dictionary repr of password with password removed"""
-		dictionary = self.to_dict()
-		del dictionary['__password']
+		dictionary = super().to_dict()
+		if '_User__email' in dictionary:
+			dictionary['email'] = dictionary['_User__email']
+			del dictionary['_User__email']
+		del dictionary['_User__password']
 		return dictionary
