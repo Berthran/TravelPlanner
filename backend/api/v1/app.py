@@ -3,7 +3,7 @@
 from flask import Flask, make_response, jsonify
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-from api.v1.views import app_views
+from backend.api.v1.views import app_views
 from dotenv import load_dotenv
 from flask_swagger_ui import get_swaggerui_blueprint
 import os

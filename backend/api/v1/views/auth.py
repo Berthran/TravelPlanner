@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Module handles all authentications"""
-from api.v1.views import app_views
+from backend.api.v1.views import app_views
 from backend.models.user import User
 from backend.models import storage
 from flask import jsonify, request
@@ -41,19 +41,17 @@ def signup():
 	data = request.get_json()
 	email = data.get('email')
 	password = data.get('password')
-	firstname = data.get('firstname')
-	lastname = data.get('lastname')
+	username = data.get('username')
 
-	if not email or not password \
-	or not firstname or not lastname:
-		return jsonify({'message': 'Email, password, firstname, lastname and username are required'}), 400
+	if not email or not password or not username:
+		return jsonify({'message': 'Email, password, username are required'}), 400
 
 	if storage.get_user_by_email(email=email):
 		return jsonify({'message': 'Email address already exists'}), 400
 	try:
 		new_user = User(
 			email=email, password=password,
-			firstname=firstname, lastname=lastname)
+			username=username)
 		storage.new(new_user)
 		storage.save()
 		return jsonify({'message': 'User created successfully'}), 201

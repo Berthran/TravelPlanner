@@ -2,7 +2,10 @@
 import requests
 from dotenv import load_dotenv
 from os import getenv
-from api.v1.utils.ai import generate_weather_desc
+from backend.api.v1.utils.ai import generate_city_desc, generate_city_keyword
+from backend.models.user import User
+from flask_jwt_extended import get_jwt_identity
+from backend.models import storage
 
 load_dotenv()
 
@@ -24,7 +27,7 @@ def get_lat_lon(city_name: str) -> tuple:
 	data = r.json()
 	lat = data[0].get('lat')
 	lon = data[0].get('lon')
-	return tuple(lat, lon)
+	return lat, lon
 
 
 def get_weather_details(latitude: float, longitude: float, city_name: str) -> dict:
@@ -44,5 +47,19 @@ def get_weather_details(latitude: float, longitude: float, city_name: str) -> di
 	weather['weather'] = data.get('weather')[0].get('main')
 	weather['wind_speed'] = data.get('wind').get('speed')
 	weather['humidity'] = data.get('main').get('humidity')
-	weather['description'] = generate_weather_desc(data, city_name)
+	weather['description'] = generate_city_desc(city_name)
+	weather['keywords'] = generate_city_keyword(city_name)
 	return weather
+
+
+def get_current_user():
+	"""gets the current user's details
+
+	Returns:
+		object: the user's object from database
+	"""
+	user = get_jwt_identity()
+	user_id = user.get('id')
+	if user_id:
+		return storage.get(User, user_id)
+	return None

@@ -15,12 +15,11 @@ class User(BaseModel, Base):
 		Base (declarative base): the table model
 	"""
 	__tablename__ = 'users'
-	firstname = Column(String(128), nullable=False)
-	lastname = Column(String(128), nullable=False)
+	username = Column(String(128), nullable=False)
 	__password = Column('password', String(1024), nullable=False)
 	__email = Column('email', String(128), nullable=False)
 	
-	trips = relationship("Trip", back_populates="users")
+	trips = relationship("Trip", back_populates="user")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
