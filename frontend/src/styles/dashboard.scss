@@ -1,0 +1,157 @@
+/* client/src/styles/dashboard.scss */
+
+.dashboard {
+    background-color: var(--light-blue);
+
+    .dashboard-wrapper {
+        margin-top: 60px;
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+
+        h1 {
+            margin-bottom: 20px;
+            font-family: var(--cursive);
+        }
+
+        .upperContent {
+            display: flex;
+            width: 90%;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+
+
+            .leftContainer {
+                height: 400px;
+                width: 45%;
+                display: flex;
+                background-color: white;
+                margin-top: 40px;
+                border-radius: 10px;
+                flex-direction: column;
+                padding: 30px;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+
+                .trip-container {
+                    display: flex;
+                    background-color: var(--light-pink);
+                    padding: 10px 20px;
+                    width: 400px;
+                    gap: 30px;
+
+                    .details {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+
+                        .icon {
+                            color: var(--blue);
+                        }
+                    }
+
+                    img {
+                        height: 70px;
+                        width: 100px;
+                        object-fit: cover;
+                    }
+                }
+            }
+
+            .rightContainer {
+                height: 400px;
+                font-size: 1.2rem;
+                padding: 30px;
+                margin-top: 40px;
+                background-color: white;
+                border-radius: 10px;
+                width: 45%;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+
+                #first {
+                    color: var(--blue);
+                    margin-right: 10px;
+
+                }
+
+                .icon {
+
+                    margin-right: 10px;
+                    color: var(--sky-blue);
+                }
+
+                .wish-button {
+                    margin-top: 10px;
+                    padding: 10px 20px;
+                    background-color: var(--blue);
+                    color: white;
+                    cursor: pointer;
+                    outline: none;
+                    border: none;
+                    transition: all ease-in-out 0.3s;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                    }
+                }
+            }
+        }
+
+        .lowerContent {
+            width: 86.5%;
+            display: flex;
+            border-radius: 10px;
+            background-color: white;
+            padding: 50px;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 50px;
+
+            .side {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                img {
+                    width: 200px;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                }
+
+                p {
+                    font-size: 1.1rem;
+
+                    span {
+                        color: var(--black);
+                        font-weight: 700;
+                        background-color: var(--light-blue);
+                        padding: 5px 10px;
+                    }
+                }
+
+                section {
+                    text-align: center;
+                    padding: 20px;
+                    background-color: var(--light-pink);
+                    font-size: 1.1rem;
+                    width: 200px;
+                    margin-top: 20px;
+
+                    span {
+                        margin: 0 14px;
+                    }
+                }
+            }
+        }
+    }
+}
