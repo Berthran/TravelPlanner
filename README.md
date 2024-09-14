@@ -83,7 +83,7 @@ cat db_prep.sql | sudo mysql
 
 - run code
 
-`python3 -m api.v1.app`
+`python3 -m backend.api.v1.app`
 
 access swagger file at
 `/swagger`
