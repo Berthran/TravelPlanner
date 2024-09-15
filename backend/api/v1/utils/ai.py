@@ -17,16 +17,6 @@ class TouristAttractions(typing.TypedDict):
     places: list[str]
 
 
-def generate_city_desc(city, place=None):
-    if place is None:
-        prompt = f"Generate a brief description of {city}"
-    else:
-        prompt = f"Generate a brief description of {place} in {city}"
-    response = model.generate_content(prompt)
-
-    return response.text
-
-
 def generate_tourist_places(city_name):
     """
         Generate Tourist attractions in a place
@@ -45,7 +35,31 @@ def generate_tourist_places(city_name):
         prompt,
         generation_config=genai.GenerationConfig(
             response_mime_type="application/json",
-            response_schema=TouristAttractions
+            response_schema=TouristAttractions,
         ),
     )
     return json.loads(response.text)
+
+
+def generate_city_desc(city, place=None):
+    if place is None:
+        prompt = (
+            f"I need you to give me a brief description of {city}, "
+            "it should not be greater than 1020 letters/characters"
+        )
+    else:
+        prompt = f"I need you to give a brief description of {place} in {city}"
+
+    response = model.generate_content(prompt)
+    return response.text
+
+
+def generate_city_keyword(city_name):
+    prompt = (
+        f"I need 3 to 5 keywords of this place, {city_name}. "
+        "Send your response in this format (compulsory)e.g "
+        "A, B, C, D separated by comma"
+    )
+    response = model.generate_content(prompt)
+    data = (response.text).strip("\n")
+    return data

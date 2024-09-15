@@ -3,7 +3,10 @@ import urllib.parse
 import requests
 from dotenv import load_dotenv
 from os import getenv, mkdir
-from api.v1.utils.ai import generate_city_desc
+from api.v1.utils.ai import generate_city_desc, generate_city_keyword
+from models.user import User
+from flask_jwt_extended import get_jwt_identity
+from models import storage
 
 load_dotenv()
 
@@ -39,9 +42,7 @@ def get_lat_lon(city_name: str) -> tuple:
     return (lat, lon)
 
 
-def get_weather_details(latitude: float,
-                        longitude: float,
-                        city_name: str) -> dict:
+def get_weather_details(latitude: float, longitude: float, city: str) -> dict:
     """get the weather details of location
 
     Args:
@@ -52,13 +53,16 @@ def get_weather_details(latitude: float,
             dict: dictionary rep of weather condition
     """
     weather = {}
-    r = requests.get(f"{WEATHER_URL}?lat={latitude}&lon={longitude}&appid={API_KEY}")
+    r = requests.get(
+        f"{WEATHER_URL}?lat={latitude}&lon={longitude}&appid={API_KEY}"
+    )
     data = r.json()
     weather["temperature"] = data.get("main").get("temp")
     weather["weather"] = data.get("weather")[0].get("main")
     weather["wind_speed"] = data.get("wind").get("speed")
     weather["humidity"] = data.get("main").get("humidity")
-    weather["description"] = generate_city_desc(city_name)
+    weather["description"] = generate_city_desc(city)
+    weather["keywords"] = generate_city_keyword(city)
     return weather
 
 
@@ -163,7 +167,20 @@ def create_url_link(dir, file_name):
         Url link
     """
     params = {"city": dir, "place": file_name[:-4]}
-    query_string = urllib.parse.urlencode(params,
-                                          quote_via=urllib.parse.quote)
+    query_string = urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
 
     return f"{IMAGE_URL}?{query_string}"
+
+
+def get_current_user():
+    """gets the current user's details
+
+    Returns:
+        object: the user's object from database
+    """
+    user = get_jwt_identity()
+
+    user_id = user.get("id")
+    if user_id:
+        return storage.get(User, user_id)
+    return None

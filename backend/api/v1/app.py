@@ -54,7 +54,6 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
-
 @app.errorhandler(404)
 def not_found(error):
     """Handle 404 error
