@@ -1,5 +1,3 @@
-// client/src/pages/Dashboard.jsx
-
 import React from 'react'
 import "../styles/dashboard.scss"
 import {
