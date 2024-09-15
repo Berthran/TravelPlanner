@@ -1,3 +1,4 @@
 .idx/dev.nix
 frontend/.env
 backend
+backend/migrations/db_prep.sql
