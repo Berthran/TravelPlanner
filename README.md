@@ -50,8 +50,9 @@ AI_KEY=AIzaSyB.... (create one from Gemini API)
 - run the install script
 
 ```
-chmod +x install.sh
-./install.sh
+cd backend
+chmod +x scripts/install.sh
+./scripts/install.sh
 ```
 
 - update the .env file with your WEATHER and API KEY

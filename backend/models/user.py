@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """User Model to handle users"""
-from backend.models.base import BaseModel, Base
+from models.base import BaseModel, Base
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, String, Integer

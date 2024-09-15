@@ -3,7 +3,7 @@
 from flask import Flask, make_response, jsonify
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-from backend.api.v1.views import app_views
+from api.v1.views import app_views
 from dotenv import load_dotenv
 from flask_swagger_ui import get_swaggerui_blueprint
 import os
@@ -21,6 +21,11 @@ app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=30)
 
 jwt = JWTManager(app)
 
+# For images
+try:
+    os.mkdir("api/v1/images")
+except FileExistsError:
+    pass
 
 app.register_blueprint(app_views)
 
@@ -47,7 +52,6 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 )
 
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
-
 
 
 @app.errorhandler(404)
