@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from backend.models.engine.db_storage import DBStorage
+from models.engine.db_storage import DBStorage
 
 
 storage = DBStorage()
@@ -7,6 +7,6 @@ storage = DBStorage()
 storage.reload()
 
 # Import models here to avoid circular imports
-from backend.models.user import User
-from backend.models.trip import Trip
-from backend.models.weather import Weather
+from models.user import User
+from models.trip import Trip
+from models.weather import Weather
