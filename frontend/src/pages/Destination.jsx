@@ -15,7 +15,7 @@ const Destination = () => {
     // Fetch destination data from backend
     useEffect(() => {
         // Replace with your API endpoint
-        fetch('/api/destination')
+        fetch('/api/dashboard')
             .then(response => response.json())
             .then(data => {
                 setViewState({
