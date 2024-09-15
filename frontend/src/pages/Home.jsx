@@ -27,7 +27,7 @@ const Home = () => {
     useEffect(() => {
         const getPlaces = async () => {
           const promise = await fetch(
-            `https://maps.googleapis.com/maps/api/place/findplacefromtext/${value}.json?access_token=${process.env.MAP_API_KEY}`
+            `https://maps.googleapis.com/maps/api/place/${value}.json?access_token=${process.env.MAP_API_KEY}`
           );
           const data = await promise.json();
           setPlaces(data.features);
