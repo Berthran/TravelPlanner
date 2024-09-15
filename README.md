@@ -50,6 +50,7 @@ AI_KEY=AIzaSyB.... (create one from Gemini API)
 - run the install script
 
 ```
+cd backend
 chmod +x install.sh
 ./install.sh
 ```
