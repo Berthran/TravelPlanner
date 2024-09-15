@@ -29,8 +29,6 @@ class DBStorage:
         DB_PORT = getenv('DB_PORT', '3306')
         DB_NAME = getenv('DB_NAME')
 
-        database_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-        print(database_url)
         self.__engine = create_engine(
             f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
         )

@@ -21,6 +21,11 @@ app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=30)
 
 jwt = JWTManager(app)
 
+# For images
+try:
+    os.mkdir("api/v1/images")
+except FileExistsError:
+    pass
 
 app.register_blueprint(app_views)
 

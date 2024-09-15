@@ -20,6 +20,8 @@ DB_NAME="${MYSQL_DB:=travel_planner}"
 DB_PORT="${MYSQL_PORT:=3306}"
 # Check if a host has been set, Otherwise default to localhost
 DB_HOST="${MYSQL_HOST:=localhost}"
+# pymysql host(I don't know why)
+PYMYSQL_HOST=192.168.65.1
 
 # Allow to skip docker if a dockerized mysql database is already running
 if [[ -z "${SKIP_DOCKER}" ]] 
@@ -46,12 +48,12 @@ done
 docker exec travel_planner_db mysql \
 	-h "${DB_HOST}" \
 	--password="${DB_PASSWORD}" \
-	-e "CREATE USER '${DB_USER}'@'${DB_HOST}' IDENTIFIED BY '${DB_PASSWORD}';"
+	-e "CREATE USER '${DB_USER}'@'${PYMYSQL_HOST}' IDENTIFIED BY '${DB_PASSWORD}';"
 
 docker exec travel_planner_db mysql \
 	-h "${DB_HOST}" \
 	--password="${DB_PASSWORD}" \
-	-e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'${DB_HOST}';"
+	-e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'${PYMYSQL_HOST}';"
 
 
 docker exec travel_planner_db mysql \
