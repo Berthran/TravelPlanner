@@ -1,20 +1,9 @@
-// client/src/pages/Destination.jsx
-
-import React, {
-    useState
-} from 'react'
-import {
-    faMoneyBill1Wave,
-    faWalking
-} from '@fortawesome/free-solid-svg-icons'
-import {
-    FontAwesomeIcon
-} from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react'
+import { faMoneyBill1Wave, faWalking } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navbar from '../components/Navbar';
 import "../styles/destination.scss"
-import Map, {
-    Marker
-} from 'react-map-gl';
+import Map, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const Destination = () => {
