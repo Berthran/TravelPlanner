@@ -6,7 +6,7 @@ create_env() {
     echo "
 DB_PORT=3306
 DB_USER=traveller
-DB_PASSWORD=traveller
+DB_PASSWORD=Trave@ller47
 DB_NAME=travel_planner
 DB_HOST=localhost
 SECRET_KEY=traveller
