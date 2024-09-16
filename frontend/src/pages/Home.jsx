@@ -24,7 +24,7 @@ const Home = () => {
       if (value) {
         try {
           const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/textsearch/json`,
+            'https://maps.googleapis.com/maps/api/place/textsearch/json',
             {
               params: {
                 query: value,
@@ -45,11 +45,11 @@ const Home = () => {
 
   const handleClick = async (query) => {
     setValue(query.name); // Set the selected place name in the input field
-    setViewState((prevState) => ({
-      ...prevState,
+    setViewState({
       lat: query.geometry.location.lat,
       lng: query.geometry.location.lng,
-    }));
+      zoom: 12, // You might adjust zoom based on your requirements
+    });
 
     // Send only the place name to the backend
     try {
