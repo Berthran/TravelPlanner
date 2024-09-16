@@ -1,91 +1,138 @@
-// client/src/pages/Register.jsx
-
-import React from 'react'
-import { faPhone } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Navbar from "../components/Navbar"
-import "../styles/register.scss"
+import React, { useState } from 'react';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleRegister = async (e) => {
+        e.preventDefault(); // Prevent the default form submission
+        setError(''); // Clear previous errors
+        setLoading(true); // Show loading indicator
+
+        try {
+            await axios.post('http://localhost:5000/api/v1/register', {
+                name,
+                username,
+                phone,
+                password
+            });
+            navigate('/login'); // Redirect to login page
+        } catch (error) {
+            setError('Error registering: ' + error.response?.data?.message || 'Please try again later.');
+        } finally {
+            setLoading(false); // Hide loading indicator
+        }
+    };
+
     return (
-        <div className='registerPage'>
+        <div className='grid place-items-center bg-light-pink h-screen w-screen'>
             <Navbar />
-            <div class="grid">
-
-                <h2 className='title'>Join our Community!</h2>
-
-                <form action="https://httpbin.org/post" method="POST"
-                    class="form login">
-
-                    <div class="form__field">
-                        <label for="login__username"><svg class="icon">
-                            <use href="#icon-user"></use>
-                        </svg><span class="hidden">Name</span></label>
-                        <input autocomplete="username" id="login__username"
-                            type="text" name="username" class="form__input"
-                            placeholder="Name" required />
-                    </div>
-
-                    <div class="form__field">
-                        <label for="login__username">
-                            <svg class="icon">
+            <div className="max-w-md mx-auto w-full p-6 bg-white rounded-lg shadow-lg">
+                <h2 className='text-2xl font-cursive text-black mb-12 text-center'>
+                    Join our Community!
+                </h2>
+                <form onSubmit={handleRegister} className="space-y-4">
+                    {error && <div className="text-red-600 mb-4">{error}</div>}
+                    <div className="flex flex-col">
+                        <label htmlFor="register__name" className="flex items-center space-x-2 bg-light-blue text-white p-3 rounded-t-md">
+                            <svg className="w-4 h-4 fill-bright-blue">
                                 <use href="#icon-user"></use>
                             </svg>
-                            <span class="hidden">Username</span>
+                            <span className="sr-only">Name</span>
                         </label>
-                        <input autocomplete="username" id="login__username"
-                            type="text" name="username" class="form__input"
-                            placeholder="Username" required />
+                        <input
+                            id="register__name"
+                            type="text"
+                            name="name"
+                            className="border border-gray-300 p-3 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
                     </div>
-
-                    <div class="form__field">
-                        <label for="login__username">
-                            <FontAwesomeIcon icon={faPhone} className="icon" />
-                            <span class="hidden">Phone Number</span>
+                    <div className="flex flex-col">
+                        <label htmlFor="register__username" className="flex items-center space-x-2 bg-light-blue text-white p-3 rounded-t-md">
+                            <svg className="w-4 h-4 fill-bright-blue">
+                                <use href="#icon-user"></use>
+                            </svg>
+                            <span className="sr-only">Username</span>
                         </label>
-                        <input autocomplete="username" id="login__username"
-                            type="text" name="username" class="form__input"
-                            placeholder="Phone Number" required />
+                        <input
+                            id="register__username"
+                            type="text"
+                            name="username"
+                            className="border border-gray-300 p-3 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
                     </div>
-
-                    <div class="form__field">
-                        <label for="login__password"><svg class="icon">
-                            <use href="#icon-lock"></use>
-                        </svg><span class="hidden">Password</span></label>
-                        <input id="login__password" type="password" name="password"
-                            class="form__input" placeholder="Password" required />
+                    <div className="flex flex-col">
+                        <label htmlFor="register__phone" className="flex items-center space-x-2 bg-light-blue text-white p-3 rounded-t-md">
+                            <FontAwesomeIcon icon={faPhone} className="w-4 h-4 fill-bright-blue" />
+                            <span className="sr-only">Phone Number</span>
+                        </label>
+                        <input
+                            id="register__phone"
+                            type="text"
+                            name="phone"
+                            className="border border-gray-300 p-3 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Phone Number"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                        />
                     </div>
-
-                    <div class="form__field">
-                        <input type="submit" value="Sign In" />
+                    <div className="flex flex-col">
+                        <label htmlFor="register__password" className="flex items-center space-x-2 bg-light-blue text-white p-3 rounded-t-md">
+                            <svg className="w-4 h-4 fill-bright-blue">
+                                <use href="#icon-lock"></use>
+                            </svg>
+                            <span className="sr-only">Password</span>
+                        </label>
+                        <input
+                            id="register__password"
+                            type="password"
+                            name="password"
+                            className="border border-gray-300 p-3 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
                     </div>
-
+                    <div className="flex flex-col">
+                        <button
+                            type="submit"
+                            className={`w-full py-3 text-white font-bold text-lg uppercase rounded-md ${loading ? 'bg-blue-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'}`}
+                            disabled={loading}
+                        >
+                            {loading ? 'Registering...' : 'Register'}
+                        </button>
+                    </div>
                 </form>
-
-                <p class="text--center">Already a member?
-                    <a href="/login">Sign In</a>
-                    <svg class="icon">
+                <p className="text-center mt-6">
+                    Already a member? <a href="/login" className="text-blue-600 hover:text-blue-800">Sign In</a>
+                    <svg className="inline w-4 h-4 fill-blue-600 ml-2">
                         <use href="#icon-arrow-right"></use>
-                    </svg></p>
-
-
+                    </svg>
+                </p>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icons">
-                <symbol id="icon-arrow-right" viewBox="0 0 1792 1792">
-                    <path
-                        d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z" />
-                </symbol>
-                <symbol id="icon-lock" viewBox="0 0 1792 1792">
-                    <path
-                        d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z" />
-                </symbol>
-                <symbol id="icon-user" viewBox="0 0 1792 1792">
-                    <path
-                        d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z" />
-                </symbol>
-            </svg>
+            {/* SVG symbols here */}
         </div>
-    )
-}
+    );
+};
 
-export default Register
+export default Register;
