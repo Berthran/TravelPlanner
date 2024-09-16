@@ -1,197 +1,124 @@
-// client/src/pages/Destination.jsx
-
-import React, {
-    useState
-} from 'react'
-import {
-    faMoneyBill1Wave,
-    faWalking
-} from '@fortawesome/free-solid-svg-icons'
-import {
-    FontAwesomeIcon
-} from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Navbar from '../components/Navbar';
-import "../styles/destination.scss"
-import Map, {
-    Marker
-} from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useParams } from 'react-router-dom'; // To get the city name from URL
+import "../styles/destination.scss";
+import axios from 'axios';
 
 const Destination = () => {
-
-    const [viewState, setViewState] = React.useState({
-        latitude: 35.6764,
-        longitude: 139.7300,
+    const { city } = useParams(); // Capture the city parameter from the URL
+    const [viewState, setViewState] = useState({
+        latitude: 35.6764,  // Default latitude (Tokyo, Japan)
+        longitude: 139.7300, // Default longitude (Tokyo, Japan)
         zoom: 10
     });
 
-    const [accommodationPrice, setAccommodationPrice] = useState(0);
-    const [flightDeparturePrice, setFlightDeparturePrice] = useState(0);
-    const [flightReturnPrice, setFlightReturnPrice] = useState(0);
-    const [transportPrice, setTransportPrice] = useState(0);
-    const [mealsPrice, setMealsPrice] = useState(0);
-    const [activitiesPrice, setActivitiesPrice] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [destinationData, setDestinationData] = useState({
+        cityName: "Tokyo, Japan",
+        description: "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene."
+    });
 
-    const calculateTotalBudget = () => {
-        return (
-            parseFloat(accommodationPrice) +
-            parseFloat(flightDeparturePrice) +
-            parseFloat(flightReturnPrice) +
-            parseFloat(transportPrice) +
-            parseFloat(mealsPrice) +
-            parseFloat(activitiesPrice)
-        );
+    // Fetch destination data from backend
+    useEffect(() => {
+        const fetchDestinationData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/v1/destination/${city}`);
+                const data = response.data;
+
+                setViewState({
+                    latitude: data.latitude || 35.6764,  // Default if backend doesn't send lat
+                    longitude: data.longitude || 139.7300, // Default if backend doesn't send lng
+                    zoom: 10
+                });
+
+                setDestinationData({
+                    cityName: data.cityName || "Unknown Location",
+                    description: data.description || "No description available."
+                });
+
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching destination data:', error);
+                setError('Failed to load destination data.');
+                setLoading(false);
+            }
+        };
+
+        fetchDestinationData();
+    }, [city]); // Re-fetch if the city changes
+
+    const mapStyles = {
+        height: "300px",
+        width: "80%"  // Adjust to make it responsive
+    };
+
+    const defaultCenter = {
+        lat: viewState.latitude,
+        lng: viewState.longitude
     };
 
     return (
         <div className='destination'>
             <Navbar />
             <div className="destination-container">
-                <div className="header">
-                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072734/hand-drawn-japanese-castle-illustration_52683-46247-compressed.jpg" alt="" />
-                    <div className="details">
-                        <h1>Tokyo, Japan</h1>
-                        <p>Tokyo, the capital of Japan, is a vibrant metropolis
-                            where traditional culture meets futuristic innovation.
-                            It boasts iconic landmarks like the Tokyo Tower
-                            and Skytree, bustling districts like Shibuya and
-                            Shinjuku, serene shrines and temples, and a diverse
-                            culinary scene. Tokyo is a dynamic blend of history,
-                            technology, and culture.
-                        </p>
-                        <p>
-                            <span>Vibrant</span>
-                            <span>Modern</span>
-                            <span>Bustling</span>
-                            <span>Electric</span>
-                            <span>Cultural</span>
-                        </p>
-                        <section>
-                            <FontAwesomeIcon icon={faMoneyBill1Wave}
-                                className="icon" />
-                            <span>$600</span>
-                            <FontAwesomeIcon icon={faWalking}
-                                className="icon" />
-                            <span>2-3 days</span>
-                        </section>
-                    </div>
-                </div>
-                <div className="location-map">
-                    <Map
-                        {...viewState}
-                        onMove={evt => setViewState(evt.viewState)}
-                        style={{ width: 1500, height: 300 }}
-                        mapStyle="mapbox://styles/mapbox/streets-v9"
-                        mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                    >
-                        <Marker className="marker"
-                            longitude={viewState.longitude}
-                            latitude={viewState.latitude} color="red" />
-                    </Map>
-                </div>
-
-
-                <div className="plan-trip-container">
-                    <h1>Start Planning Trip to Tokyo</h1>
-                    <div className="form-container">
-                        <div className="plan-input">
-                            <label>Start Date:</label>
-                            <input type="date" />
-                        </div>
-                        <div className="plan-input">
-                            <label>End Date:</label>
-                            <input type="date" />
-                        </div>
-                        <div className="plan-input">
-                            <label>No of People:</label>
-                            <input type="number" />
-                        </div>
-
-                        <div>
-                            <h3>Accommodation</h3>
-
-                            <div className="plan-input">
-                                <label>Accommodation Name:</label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Price: $</label>
-                                <input type="number" value={accommodationPrice}
-                                    onChange={(e) => setAccommodationPrice(e.target.value)} />
+                {loading ? (
+                    <div>Loading destination data...</div>
+                ) : (
+                    <div>
+                        <div className="header">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072734/hand-drawn-japanese-castle-illustration_52683-46247-compressed.jpg" alt="" />
+                            <div className="details">
+                                <h1>{destinationData.cityName}</h1>
+                                <p>{destinationData.description}</p>
+                                <section>
+                                    {/* Add any dynamic travel info, budget, duration, etc. */}
+                                </section>
                             </div>
                         </div>
-                        <div>
-                            <h3>Flights</h3>
-
-                            <div className="plan-input">
-                                <label htmlFor>Enter Flight Name: </label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Flight Departure Price: $</label>
-                                <input type="number" value={flightDeparturePrice}
-                                    onChange={(e) => setFlightDeparturePrice(e.target.value)} />
-                            </div>
-                            <div className="plan-input">
-                                <label htmlFor>Enter Flight Name: </label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Flight Return Price: $</label>
-                                <input type="number" value={flightReturnPrice}
-                                    onChange={(e) => setFlightReturnPrice(e.target.value)} />
-                            </div>
-                        </div>
-                        <div>
-                            <h3>Transportation</h3>
-
-                            <div className="plan-input">
-                                <label>Transport Type</label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Transport Cost: $</label>
-                                <input type="number" value={transportPrice}
-                                    onChange={(e) => setTransportPrice(e.target.value)} />
-                            </div>
-                        </div>
-                        <div>
-                            <h3>Meals & Food</h3>
-
-                            <div className="plan-input">
-                                <label htmlFor>Enter Meals to Try: </label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Meals & Snacks Price: $</label>
-                                <input type="number" value={mealsPrice}
-                                    onChange={(e) => setMealsPrice(e.target.value)} />
-                            </div>
-                        </div>
-                        <div>
-                            <h3>Activities & Tourist Spots</h3>
-                            <div className="plan-input">
-                                <label htmlFor>Enter Activities to Try: </label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label htmlFor>Enter Tourist Spots to Explore: </label>
-                                <input type="text" />
-                            </div>
-                            <div className="plan-input">
-                                <label>Activities & Tourist Spots Price: $</label>
-                                <input type="number" value={activitiesPrice}
-                                    onChange={(e) => setActivitiesPrice(e.target.value)} />
-                            </div>
-                        </div>
-                        <div>
-                            <h2>Total Budget: {calculateTotalBudget()}</h2>
+                        <div className="location-map">
+                            {error ? (
+                                <div>Error: {error}</div>
+                            ) : (
+                                process.env.REACT_APP_GOOGLE_MAPS_API_KEY ? (
+                                    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                                        <GoogleMap
+                                            mapContainerStyle={mapStyles}
+                                            zoom={viewState.zoom}
+                                            center={defaultCenter}
+                                            onClick={(e) => {
+                                                // Handle map click to change view or add markers
+                                                setViewState({
+                                                    latitude: e.latLng.lat(),
+                                                    longitude: e.latLng.lng(),
+                                                    zoom: viewState.zoom
+                                                });
+                                            }}
+                                        >
+                                            <Marker
+                                                position={defaultCenter}
+                                                draggable={true}
+                                                onDragEnd={(e) => {
+                                                    setViewState({
+                                                        latitude: e.latLng.lat(),
+                                                        longitude: e.latLng.lng(),
+                                                        zoom: viewState.zoom
+                                                    });
+                                                }}
+                                            />
+                                        </GoogleMap>
+                                    </LoadScript>
+                                ) : (
+                                    <div>Error: Google Maps API key is missing.</div>
+                                )
+                            )}
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Destination
+export default Destination;
