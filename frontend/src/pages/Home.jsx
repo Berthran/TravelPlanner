@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import RecCard from '../components/RecCard';
 import '../styles/home.scss';
@@ -14,54 +14,42 @@ const Home = () => {
     lng: -122.4,
     zoom: 12,
   });
+  const [autocomplete, setAutocomplete] = useState(null);
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Add your Google Maps API Key in .env
     libraries: ['places'],
   });
 
+  const inputRef = useRef(null);
+
   useEffect(() => {
-    const fetchPlaces = async () => {
-      if (value) {
-        try {
-          const response = await axios.get(
-            'https://maps.googleapis.com/maps/api/place/textsearch/json',
-            {
-              params: {
-                query: value,
-                key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-              },
-            }
-          );
-          const placesData = response.data.results;
-          setPlaces(placesData); // Store the search results
-        } catch (error) {
-          console.error('Error fetching places:', error);
-        }
-      }
-    };
-
-    fetchPlaces();
-  }, [value]);
-
-  const handleClick = async (query) => {
-    setValue(query.name); // Set the selected place name in the input field
-    setViewState({
-      lat: query.geometry.location.lat,
-      lng: query.geometry.location.lng,
-      zoom: 12, // You might adjust zoom based on your requirements
-    });
-
-    // Send only the place name to the backend
-    try {
-      await axios.post('http://localhost:5000/api/v1/place', {
-        city: query.name, // Only sending the city name
+    if (isLoaded && inputRef.current) {
+      const autocompleteService = new google.maps.places.Autocomplete(inputRef.current, {
+        types: ['geocode'], // Restrict results to geographic locations
       });
-    } catch (error) {
-      console.error('Error sending data to backend:', error);
-    }
 
-    setPlaces([]); // Clear the search results after selection
-  };
+      autocompleteService.addListener('place_changed', () => {
+        const place = autocompleteService.getPlace();
+        if (place.geometry) {
+          setViewState({
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+            zoom: 12, // You might adjust zoom based on your requirements
+          });
+
+          // Send only the place name to the backend
+          axios.post('http://localhost:5000/api/v1/place', {
+            city: place.name, // Only sending the city name
+          }).catch(error => {
+            console.error('Error sending data to backend:', error);
+          });
+        }
+      });
+
+      setAutocomplete(autocompleteService);
+    }
+  }, [isLoaded]);
 
   const mockData = [
     {
@@ -100,16 +88,9 @@ const Home = () => {
                 type='text'
                 name='place'
                 id='place'
-                value={value}
+                ref={inputRef}
                 onChange={(e) => setValue(e.target.value)} // Set value based on user input
               />
-            </div>
-            <div className='searches'>
-              {places?.map((item, index) => (
-                <div key={index} onClick={() => handleClick(item)}>
-                  <p>{item.name}</p> {/* Show place name */}
-                </div>
-              ))}
             </div>
           </div>
           <Link to={`/destination/${value}`}>
