@@ -1,8 +1,8 @@
 .idx/dev.nix
 frontend/.env
-backend1
-backend
 backend/scripts/install.sh
 backend/migrations/db_prep.sql
 backend/scripts/install.sh
-backend
+.env
+.venv
+__pycache__

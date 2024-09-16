@@ -16,8 +16,31 @@ from api.v1.utils.ai import generate_tourist_places
 from flask_jwt_extended import jwt_required
 
 
-@app_views.route("/place", methods=["POST"], strict_slashes=False)
+@app_views.route("/place_unauth", methods=["POST"], strict_slashes=False)
 @jwt_required()
+def get_weather_condition():
+    """Get weather condition of a place from city_name
+
+    Returns:
+            json: details about the place with weather details
+    """
+    data = request.get_json()
+    city_name = data.get("city_name")
+
+    lat, lon = get_lat_lon(city_name)
+    weather_data = get_weather_details(lat, lon, city_name)
+
+
+    city_places = generate_tourist_places(city_name)
+    city_information = get_picture_of_places(city_places)
+
+    return (
+        jsonify({"message": weather_data, "city_places": city_information}),
+        200,
+    )
+
+
+@app_views.route("/place", methods=["POST"], strict_slashes=False)
 def get_weather_condition():
     """Get weather condition of a place from city_name
 
@@ -60,7 +83,6 @@ def get_weather_condition():
         jsonify({"message": weather_data, "city_places": city_information}),
         200,
     )
-
 
 @app_views.route("/query_place", methods=["POST"], strict_slashes=False)
 def get_place_info():
