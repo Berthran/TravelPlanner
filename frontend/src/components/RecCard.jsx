@@ -1,5 +1,3 @@
-// client/src/components/RecCard.jsx
-
 import React from 'react'
 import "../styles/recCard.scss"
 import {
