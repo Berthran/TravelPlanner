@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import RecCard from '../components/RecCard';
 import { Link } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import Autocomplete from 'react-google-autocomplete';
 import axios from 'axios';
 
 const Home = () => {
@@ -12,40 +13,28 @@ const Home = () => {
     zoom: 12,
   });
   const [value, setValue] = useState('');
-  const inputRef = useRef(null);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Add your Google Maps API Key in .env
     libraries: ['places'],
   });
 
-  useEffect(() => {
-    if (isLoaded && inputRef.current) {
-      const autocompleteService = new google.maps.places.Autocomplete(inputRef.current, {
-        types: ['geocode'], // Restrict results to geographic locations
+  const handlePlaceSelect = (place) => {
+    if (place.geometry) {
+      setViewState({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        zoom: 12, // Adjust zoom based on requirements
       });
 
-      const handlePlaceChange = () => {
-        const place = autocompleteService.getPlace();
-        if (place.geometry) {
-          setViewState({
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-            zoom: 12, // Adjust zoom based on requirements
-          });
-
-          // Send only the place name to the backend
-          axios.post('http://127.0.0.1:5000/api/v1/query_place', {
-            city: place.name, // Only sending the city name
-          }).catch(error => {
-            console.error('Error sending data to backend:', error);
-          });
-        }
-      };
-
-      autocompleteService.addListener('place_changed', handlePlaceChange);
+      // Send only the place name to the backend
+      axios.post('http://127.0.0.1:5000/api/v1/query_place', {
+        city: place.name, // Only sending the city name
+      }).catch(error => {
+        console.error('Error sending data to backend:', error);
+      });
     }
-  }, [isLoaded]);
+  };
 
   const mockData = [
     {
@@ -75,11 +64,9 @@ const Home = () => {
         <div className='relative mb-8 w-full max-w-screen-lg'>
           <div className='absolute top-10 left-1/2 transform -translate-x-1/2 z-10'>
             <div className='flex justify-center'>
-              <input
+              <Autocomplete
+                onPlaceSelected={handlePlaceSelect}
                 placeholder='Search places'
-                type='text'
-                ref={inputRef}
-                onChange={(e) => setValue(e.target.value)}
                 className='px-4 py-2 text-lg font-quicksand rounded-lg border-none'
               />
             </div>
