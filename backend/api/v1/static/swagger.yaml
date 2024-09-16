@@ -1,0 +1,235 @@
+openapi: 3.0.0
+info:
+  title: Travel Planner
+  version: 1.0.0
+  description: API for managing travel planning.
+
+servers:
+  - url: /api/v1
+    description: Main API server
+
+paths:
+  /login:
+    post:
+      summary: User login
+      description: Handles user login and issues JWT tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "yourpassword"
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid credentials"
+  /signup:
+    post:
+      summary: User Signup
+      description: Handles user registration.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "yourpassword"
+                username:
+                  type: string
+                  example: "Bob"
+
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User created successfully"
+        '400':
+          description: Email address already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email address already exists"
+        '500':
+          description: Error in processing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message Expected"
+
+  /place:
+    post:
+      summary: weather details of place.
+      description: get the weather details of the place
+      security:
+        - accessAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city_name:
+                  type: string
+                  format: city_name
+                  example: "Lagos"
+      responses:
+        '200':
+          description: Weather condition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "{weather: }"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid credentials"
+
+
+  /query_place:
+    post:
+      summary: weather details of place.
+      description: get the weather details of the place
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city_name:
+                  type: string
+                  format: city_name
+                  example: "Lagos"
+      responses:
+        '200':
+          description: Weather condition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "{weather: }"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /dashboard:
+    get:
+      summary: Get all trips of user and weather data
+      description: get the trips, weather details of the place
+      security:
+        - accessAuth: []
+      responses:
+        '200':
+          description: All Trips listed
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                    type: string
+                    example: "[{weather: ...}]"
+        '404':
+          description: No trip found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No user trip found, try creating a trip"
+  /refresh:
+    post:
+      summary: User Signup
+      description: Handles user registration.
+      security:
+        - refreshAuth: []
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+components:
+  securitySchemes:
+    accessAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
