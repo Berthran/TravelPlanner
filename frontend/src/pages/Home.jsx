@@ -15,35 +15,40 @@ const Home = () => {
   const inputRef = useRef(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Add your Google Maps API Key in .env
     libraries: ['places'],
   });
 
   useEffect(() => {
     if (isLoaded && inputRef.current) {
-      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-        types: ['geocode'],
+      const autocompleteService = new window.google.maps.places.Autocomplete(inputRef.current, {
+        types: ['geocode'], // Restrict results to geographic locations
       });
-
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
+  
+      const handlePlaceChange = () => {
+        const place = autocompleteService.getPlace();
         if (place.geometry) {
           setViewState({
             lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng(),
-            zoom: 12,
+            zoom: 12, // Adjust zoom based on requirements
           });
-          setValue(place.name);
-
-          axios.post('http://127.0.0.1:5000/api/v1/query_place', {
-            city: place.name,
-          }).catch(error => {
-            console.error('Error sending data to backend:', error);
-          });
+  
+          // Send only the place name to the backend
+          axios
+            .post('http://127.0.0.1:5000/api/v1/query_place', {
+              city: place.name, // Only sending the city name
+            })
+            .catch((error) => {
+              console.error('Error sending data to backend:', error);
+            });
         }
-      });
+      };
+  
+      autocompleteService.addListener('place_changed', handlePlaceChange);
     }
   }, [isLoaded]);
+  
 
   const mockData = [
     {
@@ -67,23 +72,21 @@ const Home = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className='flex flex-col items-center mt-24'>
+    <div className='home'>
       <Navbar />
-      <div className='flex flex-col items-center w-full flex-wrap'>
-        <div className='relative mb-8 w-full max-w-screen-lg'>
-          <div className='absolute top-10 left-1/2 transform -translate-x-1/2 z-10'>
-            <div className='flex justify-center'>
+      <div className='home-wrapper'>
+        <div className='map'>
+          <div className='search'>
+            <div className='search-bar'>
               <input
                 placeholder='Search places'
                 type='text'
                 ref={inputRef}
-                value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className='px-4 py-2 text-lg font-quicksand rounded-lg border-none'
               />
             </div>
           </div>
-          <Link to={`/destination/${encodeURIComponent(value)}`}>
+          <Link to={`/destination/${value}`}>
             <GoogleMap
               center={{ lat: viewState.lat, lng: viewState.lng }}
               zoom={viewState.zoom}
@@ -93,8 +96,8 @@ const Home = () => {
             </GoogleMap>
           </Link>
         </div>
-        <h1 className='text-3xl font-cursive mb-12'>Recommendations for you</h1>
-        <div className='flex flex-wrap justify-center gap-4 mb-12'>
+        <h1 className='head'>Recommendations for you</h1>
+        <div className='recommendations'>
           {mockData.map((d, index) => (
             <RecCard key={index} image={d.image} name={d.name} />
           ))}
@@ -104,4 +107,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home

@@ -1,0 +1,75 @@
+/* client/src/styles/home.scss */
+
+.home {
+
+    .home-wrapper {
+        display: flex;
+        flex-direction: column;
+        margin-top: 100px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+
+        .head {
+            margin: 30px 0 50px 0;
+            letter-spacing: 1px;
+            font-family: var(--cursive);
+        }
+
+        .map {
+            position: relative;
+            margin-bottom: 30px;
+
+            .search {
+                position: absolute;
+                top: 10%;
+                z-index: 100;
+                left: 50%;
+                transform: translate(-50%, -50%);
+
+                .search-bar {
+                    width: 500px;
+                    display: flex;
+                    justify-content: center;
+
+                    input {
+                        padding: 10px;
+                        font-size: 1.2rem;
+                        font-family: "Quicksand", sans-serif;
+                        width: 300px;
+                        border-radius: 5px;
+                    }
+                }
+
+                .searches {
+                    background-color: white;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    width: 500px;
+                    position: fixed;
+
+                    p {
+                        padding: 5px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: var(--light-blue);
+                        }
+                    }
+                }
+            }
+        }
+
+        .recommendations {
+            display: flex;
+            width: 90%;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 50px;
+            gap: 10px;
+        }
+    }
+
+}
