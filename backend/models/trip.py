@@ -15,7 +15,7 @@ class Trip(BaseModel, Base):
 	city_name = Column(String(128), nullable=False)
 	latitude = Column(Float)
 	longitude = Column(Float)
-	description = Column(String(1024))
+	description = Column(String(2040))
 	keywords = Column(String(500))
 	user_id = Column(String(100), ForeignKey('users.id'), nullable=False)
 
