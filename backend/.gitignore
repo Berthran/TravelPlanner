@@ -3,3 +3,4 @@ travel_planner/
 __pycache__/
 images/
 .DS_Store
+.venv
