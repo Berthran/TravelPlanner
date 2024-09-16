@@ -17,20 +17,22 @@ const Register = () => {
         e.preventDefault(); // Prevent the default form submission
         setError(''); // Clear previous errors
         setLoading(true); // Show loading indicator
-
+    
         try {
-            await axios.post('http://localhost:5000/api/v1/register', {
+            await axios.post('http://localhost:5000/api/v1/signup', {
                 email,
                 username,
                 password
             });
             navigate('/login'); // Redirect to login page
         } catch (error) {
-            setError('Error registering: ' + error.response?.data?.message || 'Please try again later.');
+            console.error('Registration error:', error); // Log the full error object
+            setError(error.response?.data?.message || 'Error registering. Please try again later.');
         } finally {
             setLoading(false); // Hide loading indicator
         }
     };
+    
 
     return (
         <div className='registerPage'>
