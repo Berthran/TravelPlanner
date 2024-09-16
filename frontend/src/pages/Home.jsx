@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import RecCard from '../components/RecCard';
 import { Link } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import "../styles/home.scss"
 import axios from 'axios';
 
 const Home = () => {
