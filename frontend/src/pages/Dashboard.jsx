@@ -1,112 +1,96 @@
-// client/src/pages/Dashboard.jsx
-
-import React from 'react'
-import "../styles/dashboard.scss"
-import {
-    faCheckCircle,
-    faCheck,
-    faTemperature0,
-    faSun
-} from '@fortawesome/free-solid-svg-icons'
-import {
-    FontAwesomeIcon
-} from "@fortawesome/react-fontawesome";
-import Navbar from '../components/Navbar'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faCheck, faTemperature0, faSun } from '@fortawesome/free-solid-svg-icons';
+import Navbar from '../components/Navbar';
 
 const Dashboard = () => {
-    return (
-        <div className='dashboard'>
-            <Navbar />
-            <div className="dashboard-wrapper">
+  const [cityPlaces, setCityPlaces] = useState([]);
+  const [message, setMessage] = useState({});
 
-                <div className="upperContent">
-                    <div className="leftContainer">
-                        <h1>Planned Trips</h1>
-                        <div className="trip-container">
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072009/landmark-statue-liberty-new-york-city-famous-landscape-buildings-statue-liberty-uas-tourist-attraction-design-postcard-travel-poster-vector-illustration_1150-56573-compressed.jpg" alt="" />
-                            <div className="details">
-                                <h3>New York</h3>
-                                <p>23rd March - 25th March</p>
-                            </div>
-                        </div>
-                        <div className="trip-container">
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072310/travel-around-world-colorful-poster_52683-28357.jpg" alt="" />
-                            <div className="details">
-                                <h3>Venice</h3>
-                                <p>15th April - 20th April</p>
-                            </div>
-                        </div>
-                        <div className="trip-container">
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072631/flat-ski-station_23-2148010938.jpg" alt="" />
-                            <div className="details">
-                                <h3>Gangtok</h3>
-                                <p>7th June - 10th June</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rightContainer">
-                        <h1>Wishlist</h1>
-                        <div className="wish-container">
-                            <FontAwesomeIcon icon={faCheckCircle} id='first' />
-                            To drink a coffee in Paris
-                        </div>
-                        <div className="wish-container">
-                            <FontAwesomeIcon icon={faCheck} className="icon" />
-                            To climb Mount Kailash
-                        </div>
-                        <div className="wish-container">
-                            <FontAwesomeIcon icon={faCheck} className="icon" />
-                            To stand under the Northern Lights
-                        </div>
-                        <div className="wish-container">
-                            <FontAwesomeIcon icon={faCheck} className="icon" />
-                            To pick up glowing water in my hands
-                        </div>
-                        <div className="wish-container">
-                            <FontAwesomeIcon icon={faCheck} className="icon" />
-                            To light a flying lantern in Thailand
-                        </div>
+  useEffect(() => {
+    axios.get('http://127.0.0.1:5000/api/v1/get_city_data?city=Lagos')
+      .then((response) => {
+        setCityPlaces(response.data.city_places.places);
+        setMessage(response.data.message);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the data!", error);
+      });
+  }, []);
 
-                        <button className="wish-button">Add New Wish</button>
-                    </div>
+  return (
+    <div className='bg-light-blue'>
+      <Navbar />
+      <div className="mt-16 flex flex-col items-center justify-center gap-12 w-full">
+
+        {/* Planned Trips */}
+        <div className="flex w-9/12 items-center justify-center gap-12">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-2/5 h-[400px] flex flex-col items-center justify-center gap-4">
+            <h1 className="text-2xl font-cursive mb-5">Planned Trips</h1>
+            {cityPlaces.map((place, index) => (
+              <div className="flex bg-light-pink p-4 w-[400px] gap-8 items-center" key={index}>
+                <img src={place.url_link} alt={place.Place} className="h-[70px] w-[100px] object-cover" />
+                <div className="flex flex-col justify-between">
+                  <h3 className="text-lg font-bold">{place.Place}</h3>
+                  <p>{place.Description}</p>
                 </div>
-                <div className="lowerContent">
-                    <div className="side">
-                        <h1>Upcoming Tour</h1>
-                        <p>Cairo, Egypt, 17th March</p>
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072500/egyptian-night-desert-pyramids-sphinx-anubis_107791-1591.jpg" alt="" />
-                    </div>
-                    <div className="side">
-                        <h3>About</h3>
-                        <p>Cairo, Egypt's capital, is a sprawling metropolis
-                            along the Nile River. Known for its ancient landmarks
-                            like the Pyramids of Giza and the Sphinx, it's a cultural
-                            hub with museums, mosques, and vibrant markets.
-                            It blends historic charm with modern energy,
-                            offering visitors a glimpse into Egypt's rich heritage.
-                        </p>
-                        <h3>Itenerary</h3>
-                        <p><span>Pyramids of Giza
-                        </span> - <span>
-                                Egyptian Museum
-                            </span> - <span>
-                                Salah El-Din Citadel
-                            </span> - <span>
-                                Cairo Tower
-                            </span> - <span>
-                                Khan El Khalili
-                            </span></p>
-                        <section>
-                            <FontAwesomeIcon icon={faTemperature0} className="icon" />
-                            <span>30-35</span>
-                            <FontAwesomeIcon icon={faSun} className="icon" />
-                            <span>All days</span>
-                        </section>
-                    </div>
-                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Wishlist */}
+          <div className="bg-white p-8 rounded-lg shadow-lg w-2/5 h-[400px] flex flex-col items-center justify-center gap-4 text-xl">
+            <h1 className="text-2xl font-cursive">Wishlist</h1>
+            <div className="flex items-center space-x-2 text-blue-600">
+              <FontAwesomeIcon icon={faCheckCircle} />
+              <span>To drink a coffee in Paris</span>
             </div>
-        </div>
-    )
-}
+            <div className="flex items-center space-x-2 text-sky-blue">
+              <FontAwesomeIcon icon={faCheck} />
+              <span>To climb Mount Kailash</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sky-blue">
+              <FontAwesomeIcon icon={faCheck} />
+              <span>To stand under the Northern Lights</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sky-blue">
+              <FontAwesomeIcon icon={faCheck} />
+              <span>To pick up glowing water in my hands</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sky-blue">
+              <FontAwesomeIcon icon={faCheck} />
+              <span>To light a flying lantern in Thailand</span>
+            </div>
 
-export default Dashboard
+            <button className="bg-blue-600 text-white py-2 px-4 rounded-md mt-4 transition-transform transform hover:translate-y-[-2px]">
+              Add New Wish
+            </button>
+          </div>
+        </div>
+
+        {/* Upcoming Tour */}
+        <div className="flex w-11/12 bg-white p-12 rounded-lg shadow-lg gap-12 mb-12">
+          <div className="flex flex-col gap-4 w-1/2">
+            <h1 className="text-2xl font-cursive">Upcoming Tour</h1>
+            <p>{message.description}</p>
+            <img src={cityPlaces.length > 0 ? cityPlaces[0].url_link : ''} alt="Upcoming Tour" className="w-[200px] h-[100px] object-cover rounded-lg" />
+          </div>
+          <div className="flex flex-col gap-4 w-1/2">
+            <h3 className="text-xl font-bold">About</h3>
+            <p>{message.description}</p>
+            <h3 className="text-xl font-bold">Weather</h3>
+            <section className="flex items-center justify-center bg-light-pink p-4 rounded-md text-lg">
+              <FontAwesomeIcon icon={faTemperature0} className="text-blue-600 mr-2" />
+              <span>{Math.round(message.temperature - 273.15)}°C</span>
+              <FontAwesomeIcon icon={faSun} className="text-yellow-500 ml-4 mr-2" />
+              <span>{message.weather}</span>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

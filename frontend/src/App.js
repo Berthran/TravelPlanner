@@ -1,11 +1,12 @@
-// client/src/App.js
-
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Destination from "./pages/Destination";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import PlanTrip from './pages/PlanTrip';
+import Destination from './pages/Destination';
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 
 function App() {
     return (
@@ -14,8 +15,30 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/destination/:id" element={<Destination />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/planTrip"
+                    element={
+                        <ProtectedRoute>
+                            <PlanTrip />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/destination/:city"
+                    element={
+                        <ProtectedRoute>
+                            <Destination />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     );
