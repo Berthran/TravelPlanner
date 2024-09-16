@@ -59,6 +59,8 @@ const Home = () => {
         // Handle response if needed
         console.log('Place details:', response.data);
         // Redirect to destination page or update state as needed
+        // Example: Redirect to destination page
+        window.location.href = `/destination/${city}`;
       })
       .catch((error) => {
         console.error('Error sending data to backend:', error);
