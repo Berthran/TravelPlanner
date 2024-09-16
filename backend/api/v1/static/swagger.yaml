@@ -143,6 +143,43 @@ paths:
                     type: string
                     example: "Invalid credentials"
 
+
+  /query_place:
+    post:
+      summary: weather details of place.
+      description: get the weather details of the place
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city_name:
+                  type: string
+                  format: city_name
+                  example: "Lagos"
+      responses:
+        '200':
+          description: Weather condition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "{weather: }"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
   /dashboard:
     get:
       summary: Get all trips of user and weather data
