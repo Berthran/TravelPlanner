@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import RecCard from '../components/RecCard';
 import { Link } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
-import "../styles/home.scss"
+import "../styles/home.scss";
 import axios from 'axios';
 
 const Home = () => {
@@ -35,9 +35,9 @@ const Home = () => {
             zoom: 12, // Adjust zoom based on requirements
           });
   
-          // Send only the place name to the backend
+          // Send the place name to the backend
           axios
-            .post('http://127.0.0.1:5000/api/v1/query_place', {
+            .post('http://127.0.0.1:5000/place', {
               city: place.name, // Only sending the city name
             })
             .catch((error) => {
@@ -49,7 +49,21 @@ const Home = () => {
       autocompleteService.addListener('place_changed', handlePlaceChange);
     }
   }, [isLoaded]);
-  
+
+  const handleRecommendationClick = (city) => {
+    axios
+      .post('http://127.0.0.1:5000/place', {
+        city, // Send the city name
+      })
+      .then((response) => {
+        // Handle response if needed
+        console.log('Place details:', response.data);
+        // Redirect to destination page or update state as needed
+      })
+      .catch((error) => {
+        console.error('Error sending data to backend:', error);
+      });
+  };
 
   const mockData = [
     {
@@ -100,7 +114,12 @@ const Home = () => {
         <h1 className='head'>Recommendations for you</h1>
         <div className='recommendations'>
           {mockData.map((d, index) => (
-            <RecCard key={index} image={d.image} name={d.name} />
+            <RecCard
+              key={index}
+              image={d.image}
+              name={d.name}
+              onClick={() => handleRecommendationClick(d.name)} // Handle click
+            />
           ))}
         </div>
       </div>
@@ -108,4 +127,4 @@ const Home = () => {
   );
 };
 
-export default Home
+export default Home;
