@@ -37,7 +37,7 @@ const Home = () => {
   
           // Send the place name to the backend
           axios
-            .post('http://localhost:3000/place', {
+            .post('http://localhost:3000/query_place', {
               city: place.name, // Only sending the city name
             })
             .catch((error) => {
@@ -59,7 +59,6 @@ const Home = () => {
         // Handle response if needed
         console.log('Place details:', response.data);
         // Redirect to destination page or update state as needed
-        // Example: Redirect to destination page
         window.location.href = `/destination/${city}`;
       })
       .catch((error) => {
