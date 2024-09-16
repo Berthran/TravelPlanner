@@ -20,7 +20,7 @@ const Destination = () => {
 
     // Fetch destination data from backend
     useEffect(() => {
-        fetch(`/api/dashboard?city=${city}`) // Pass the city parameter in the request
+        fetch(`/api/dashboard?city=${city}`)
             .then(response => response.json())
             .then(data => {
                 setViewState({
@@ -30,7 +30,7 @@ const Destination = () => {
                 });
                 setDestinationData({
                     cityName: data.cityName || "Tokyo, Japan",
-                    description: data.description || destinationData.description
+                    description: data.description || "Default description"
                 });
                 setLoading(false);
             })
@@ -39,7 +39,7 @@ const Destination = () => {
                 setError('Failed to load destination data.');
                 setLoading(false);
             });
-    }, [city]); // Depend on city parameter
+    }, [city]);
 
     const mapStyles = {
         height: "300px",
