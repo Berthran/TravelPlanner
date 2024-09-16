@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Link, useParams } from 'react-router-dom'; // Import useParams and Link
 import Navbar from '../components/Navbar';
-import { useParams } from 'react-router-dom'; // To get the city name from URL
 import "../styles/destination.scss";
-import axios from 'axios';
 
 const Destination = () => {
-    const { city } = useParams(); // Capture the city parameter from the URL
+    const { city } = useParams(); // Get the city parameter from the URL
     const [viewState, setViewState] = useState({
         latitude: 35.6764,  // Default latitude (Tokyo, Japan)
         longitude: 139.7300, // Default longitude (Tokyo, Japan)
@@ -22,32 +21,26 @@ const Destination = () => {
 
     // Fetch destination data from backend
     useEffect(() => {
-        const fetchDestinationData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/v1/destination/${city}`);
-                const data = response.data;
-
+        fetch(`/api/dashboard?city=${city}`) // Pass the city parameter in the request
+            .then(response => response.json())
+            .then(data => {
                 setViewState({
-                    latitude: data.latitude || 35.6764,  // Default if backend doesn't send lat
-                    longitude: data.longitude || 139.7300, // Default if backend doesn't send lng
+                    latitude: data.latitude || 35.6764,
+                    longitude: data.longitude || 139.7300,
                     zoom: 10
                 });
-
                 setDestinationData({
-                    cityName: data.cityName || "Unknown Location",
-                    description: data.description || "No description available."
+                    cityName: data.cityName || "Tokyo, Japan",
+                    description: data.description || destinationData.description
                 });
-
                 setLoading(false);
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error fetching destination data:', error);
                 setError('Failed to load destination data.');
                 setLoading(false);
-            }
-        };
-
-        fetchDestinationData();
-    }, [city]); // Re-fetch if the city changes
+            });
+    }, [city]); // Depend on city parameter
 
     const mapStyles = {
         height: "300px",
@@ -75,6 +68,9 @@ const Destination = () => {
                                 <section>
                                     {/* Add any dynamic travel info, budget, duration, etc. */}
                                 </section>
+                                <Link to={`/planTrip/${city}`} className="plan-trip-link">
+                                    <button>Plan Trip to {destinationData.cityName}</button>
+                                </Link>
                             </div>
                         </div>
                         <div className="location-map">

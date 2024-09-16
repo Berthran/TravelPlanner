@@ -53,7 +53,7 @@ const Home = () => {
 
     // Send only the place name to the backend
     try {
-      await axios.post('http://localhost:5000/api/v1/destination', {
+      await axios.post('http://localhost:5000/api/v1/place', {
         city: query.name, // Only sending the city name
       });
     } catch (error) {
