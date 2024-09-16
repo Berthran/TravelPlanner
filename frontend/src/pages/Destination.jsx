@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Link, useParams } from 'react-router-dom'; // Import useParams and Link
 import Navbar from '../components/Navbar';
+import "../styles/destination.scss";
 
 const Destination = () => {
     const { city } = useParams(); // Get the city parameter from the URL
@@ -20,7 +21,7 @@ const Destination = () => {
 
     // Fetch destination data from backend
     useEffect(() => {
-        fetch(`/api/dashboard?city=${city}`)
+        fetch(`/api/dashboard?city=${city}`) // Pass the city parameter in the request
             .then(response => response.json())
             .then(data => {
                 setViewState({
@@ -30,7 +31,7 @@ const Destination = () => {
                 });
                 setDestinationData({
                     cityName: data.cityName || "Tokyo, Japan",
-                    description: data.description || "Default description"
+                    description: data.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene."
                 });
                 setLoading(false);
             })
@@ -39,7 +40,8 @@ const Destination = () => {
                 setError('Failed to load destination data.');
                 setLoading(false);
             });
-    }, [city]);
+    }, [city]); // Depend on city parameter
+    
 
     const mapStyles = {
         height: "300px",
@@ -52,37 +54,29 @@ const Destination = () => {
     };
 
     return (
-        <div className='flex flex-col items-center'>
+        <div className='destination'>
             <Navbar />
-            <div className="flex flex-col items-center justify-center mt-24">
+            <div className="destination-container">
                 {loading ? (
                     <div>Loading destination data...</div>
                 ) : (
                     <div>
-                        <div className="flex gap-24 p-8 items-center justify-center w-full max-w-screen-lg">
-                            <img
-                                src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072734/hand-drawn-japanese-castle-illustration_52683-46247-compressed.jpg"
-                                alt=""
-                                className="h-[400px] w-[500px] object-cover clip-path-polygon"
-                            />
-                            <div className="flex flex-col gap-5 w-3/5">
-                                <h1 className="text-4xl font-cursive"> {destinationData.cityName} </h1>
-                                <p>
-                                    {destinationData.description}
-                                </p>
-                                <section className="bg-light-pink text-center py-5 rounded-md">
+                        <div className="header">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072734/hand-drawn-japanese-castle-illustration_52683-46247-compressed.jpg" alt="" />
+                            <div className="details">
+                                <h1>{destinationData.cityName}</h1>
+                                <p>{destinationData.description}</p>
+                                <section>
                                     {/* Add any dynamic travel info, budget, duration, etc. */}
                                 </section>
-                                <Link to={`/planTrip/${city}`} className="inline-block">
-                                    <button className="bg-blue-600 text-white py-2 px-4 rounded-md transition-transform transform hover:translate-y-[-2px]">
-                                        Plan Trip to {destinationData.cityName}
-                                    </button>
+                                <Link to={`/planTrip/${city}`} className="plan-trip-link">
+                                    <button>Plan Trip to {destinationData.cityName}</button>
                                 </Link>
                             </div>
                         </div>
-                        <div className="mt-12">
+                        <div className="location-map">
                             {error ? (
-                                <div className="text-red-600">Error: {error}</div>
+                                <div>Error: {error}</div>
                             ) : (
                                 process.env.REACT_APP_GOOGLE_MAPS_API_KEY ? (
                                     <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
@@ -113,7 +107,7 @@ const Destination = () => {
                                         </GoogleMap>
                                     </LoadScript>
                                 ) : (
-                                    <div className="text-red-600">Error: Google Maps API key is missing.</div>
+                                    <div>Error: Google Maps API key is missing.</div>
                                 )
                             )}
                         </div>

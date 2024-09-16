@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import "../styles/destination.scss";
+
 
 export default function PlanTrip() {
     const { city } = useParams(); // Get the city parameter from the URL
@@ -22,128 +24,101 @@ export default function PlanTrip() {
     };
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6">Start Planning Trip to {city}</h1>
-            <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-                <div className="grid gap-4 mb-6">
-                    <div className="flex flex-col">
-                        <label className="text-lg font-semibold mb-2">Start Date:</label>
-                        <input type="date" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="text-lg font-semibold mb-2">End Date:</label>
-                        <input type="date" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="text-lg font-semibold mb-2">No of People:</label>
-                        <input type="number" className="p-2 border border-gray-300 rounded" />
-                    </div>
+        <div className="plan-trip-container">
+            <h1>Start Planning Trip to {city}</h1> {/* Display the city name */}
+            <div className="form-container">
+                <div className="plan-input">
+                    <label>Start Date:</label>
+                    <input type="date" />
                 </div>
-
-                <div className="mb-6">
-                    <h3 className="text-2xl font-semibold mb-2">Accommodation</h3>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Accommodation Name:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Price: $</label>
-                        <input
-                            type="number"
-                            value={accommodationPrice}
-                            onChange={(e) => setAccommodationPrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
+                <div className="plan-input">
+                    <label>End Date:</label>
+                    <input type="date" />
                 </div>
-
-                <div className="mb-6">
-                    <h3 className="text-2xl font-semibold mb-2">Flights</h3>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Enter Flight Name:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Flight Departure Price: $</label>
-                        <input
-                            type="number"
-                            value={flightDeparturePrice}
-                            onChange={(e) => setFlightDeparturePrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Enter Flight Name:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Flight Return Price: $</label>
-                        <input
-                            type="number"
-                            value={flightReturnPrice}
-                            onChange={(e) => setFlightReturnPrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-6">
-                    <h3 className="text-2xl font-semibold mb-2">Transportation</h3>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Transport Type</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Transport Cost: $</label>
-                        <input
-                            type="number"
-                            value={transportPrice}
-                            onChange={(e) => setTransportPrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-6">
-                    <h3 className="text-2xl font-semibold mb-2">Meals & Food</h3>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Enter Meals to Try:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Meals & Snacks Price: $</label>
-                        <input
-                            type="number"
-                            value={mealsPrice}
-                            onChange={(e) => setMealsPrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-6">
-                    <h3 className="text-2xl font-semibold mb-2">Activities & Tourist Spots</h3>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Enter Activities to Try:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Enter Tourist Spots to Explore:</label>
-                        <input type="text" className="p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="text-lg font-semibold mb-2">Activities & Tourist Spots Price: $</label>
-                        <input
-                            type="number"
-                            value={activitiesPrice}
-                            onChange={(e) => setActivitiesPrice(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                        />
-                    </div>
+                <div className="plan-input">
+                    <label>No of People:</label>
+                    <input type="number" />
                 </div>
 
                 <div>
-                    <h2 className="text-3xl font-bold">Total Budget: ${calculateTotalBudget()}</h2>
+                    <h3>Accommodation</h3>
+
+                    <div className="plan-input">
+                        <label>Accommodation Name:</label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Price: $</label>
+                        <input type="number" value={accommodationPrice}
+                            onChange={(e) => setAccommodationPrice(e.target.value)} />
+                    </div>
+                </div>
+                <div>
+                    <h3>Flights</h3>
+
+                    <div className="plan-input">
+                        <label htmlFor>Enter Flight Name: </label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Flight Departure Price: $</label>
+                        <input type="number" value={flightDeparturePrice}
+                            onChange={(e) => setFlightDeparturePrice(e.target.value)} />
+                    </div>
+                    <div className="plan-input">
+                        <label htmlFor>Enter Flight Name: </label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Flight Return Price: $</label>
+                        <input type="number" value={flightReturnPrice}
+                            onChange={(e) => setFlightReturnPrice(e.target.value)} />
+                    </div>
+                </div>
+                <div>
+                    <h3>Transportation</h3>
+
+                    <div className="plan-input">
+                        <label>Transport Type</label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Transport Cost: $</label>
+                        <input type="number" value={transportPrice}
+                            onChange={(e) => setTransportPrice(e.target.value)} />
+                    </div>
+                </div>
+                <div>
+                    <h3>Meals & Food</h3>
+
+                    <div className="plan-input">
+                        <label htmlFor>Enter Meals to Try: </label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Meals & Snacks Price: $</label>
+                        <input type="number" value={mealsPrice}
+                            onChange={(e) => setMealsPrice(e.target.value)} />
+                    </div>
+                </div>
+                <div>
+                    <h3>Activities & Tourist Spots</h3>
+                    <div className="plan-input">
+                        <label htmlFor>Enter Activities to Try: </label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label htmlFor>Enter Tourist Spots to Explore: </label>
+                        <input type="text" />
+                    </div>
+                    <div className="plan-input">
+                        <label>Activities & Tourist Spots Price: $</label>
+                        <input type="number" value={activitiesPrice}
+                            onChange={(e) => setActivitiesPrice(e.target.value)} />
+                    </div>
+                </div>
+                <div>
+                    <h2>Total Budget: {calculateTotalBudget()}</h2>
                 </div>
             </div>
         </div>
