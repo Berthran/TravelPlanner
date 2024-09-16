@@ -19,7 +19,7 @@ AI_KEY=?
 
 
 sudo service mysql start
-cat migrations/db_prep.sql | sudo mysql
+cat db_prep.sql | sudo mysql
 if [ $? -ne 0 ]; then
     echo "Error occurred while creating DB"
 else

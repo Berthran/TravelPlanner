@@ -1,0 +1,5 @@
+.idx/dev.nix
+frontend/.env
+backend1
+backend
+backend/scripts/install.sh
