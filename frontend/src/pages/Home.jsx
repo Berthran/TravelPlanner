@@ -37,7 +37,7 @@ const Home = () => {
   
           // Send the place name to the backend
           axios
-            .post('http://127.0.0.1:5000/place', {
+            .post('http://localhost:3000/place', {
               city: place.name, // Only sending the city name
             })
             .catch((error) => {
@@ -52,7 +52,7 @@ const Home = () => {
 
   const handleRecommendationClick = (city) => {
     axios
-      .post('http://127.0.0.1:5000/place', {
+      .post('http://localhost:3000/place', {
         city, // Send the city name
       })
       .then((response) => {
