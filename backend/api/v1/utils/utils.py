@@ -135,7 +135,7 @@ def get_picture_of_place(city, place):
         },
     )
 
-    file_name = f"{place.split(" ")[0]}.png"
+    file_name = f"{place.split(' ')[0]}.png"
     save_image(city, file_name, response.content)
     url_link = create_url_link(city, file_name)
 
