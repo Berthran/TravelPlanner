@@ -21,7 +21,7 @@ DB_PORT="${MYSQL_PORT:=3306}"
 # Check if a host has been set, Otherwise default to localhost
 DB_HOST="${MYSQL_HOST:=localhost}"
 # pymysql host(I don't know why)
-PYMYSQL_HOST=192.168.65.1
+PYMYSQL_HOST=172.17.0.1
 
 # Allow to skip docker if a dockerized mysql database is already running
 if [[ -z "${SKIP_DOCKER}" ]] 
