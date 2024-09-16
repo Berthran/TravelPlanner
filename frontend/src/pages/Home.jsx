@@ -52,7 +52,7 @@ const Home = () => {
 
   const handleRecommendationClick = (city) => {
     axios
-      .post('http://localhost:3000/place', {
+      .post('http://localhost:3000/query_place', {
         city, // Send the city name
       })
       .then((response) => {
