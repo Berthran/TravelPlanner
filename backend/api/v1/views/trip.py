@@ -16,6 +16,7 @@ from flask_jwt_extended import jwt_required
 
 
 @app_views.route("/place", methods=["POST"], strict_slashes=False)
+@jwt_required()
 def get_weather_condition():
     """Get weather condition of a place from city_name
 
