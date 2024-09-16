@@ -1,121 +1,136 @@
-import React, {
-    useState,
-    useEffect
-} from 'react'
-import Navbar from '../components/Navbar'
-import RecCard from "../components/RecCard"
-import Map, {
-    Marker
-} from "react-map-gl"
-import 'mapbox-gl/dist/mapbox-gl.css';
-import "../styles/home.scss"
-import {
-    Link
-} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import RecCard from '../components/RecCard';
+import '../styles/home.scss';
+import { Link } from 'react-router-dom';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import axios from 'axios';
 
 const Home = () => {
+  const [places, setPlaces] = useState([]);
+  const [value, setValue] = useState('');
+  const [viewState, setViewState] = useState({
+    lat: 37.8,
+    lng: -122.4,
+    zoom: 12,
+  });
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Add your Google Maps API Key in .env
+    libraries: ['places'],
+  });
 
-    const [places, setPlaces] = useState([]);
-    const [value, setValue] = useState("");
-    const [viewState, setViewState] = React.useState({
-        latitude: 37.8,
-        longitude: -122.4,
-        zoom: 12
-    });
-
-
-    useEffect(() => {
-        const getPlaces = async () => {
-          const promise = await fetch(
-            `https://maps.googleapis.com/maps/api/place/${value}.json?access_token=${process.env.MAP_API_KEY}`
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      if (value) {
+        try {
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/place/textsearch/json`,
+            {
+              params: {
+                query: value,
+                key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+              },
+            }
           );
-          const data = await promise.json();
-          setPlaces(data.features);
-          console.log(data);
-        };
-
-        if (value) {
-          getPlaces();
+          const placesData = response.data.results;
+          setPlaces(placesData); // Store the search results
+        } catch (error) {
+          console.error('Error fetching places:', error);
         }
-      }, [value]);
+      }
+    };
 
+    fetchPlaces();
+  }, [value]);
 
-    const handleClick = (query) => {
-        setValue(query.place_name)
-        const { center } = query;
-        setViewState((prevState) => ({
-            ...prevState,
-            latitude: center[1],
-            longitude: center[0],
-        }));
-        setPlaces([])
+  const handleClick = async (query) => {
+    setValue(query.name); // Set the selected place name in the input field
+    setViewState((prevState) => ({
+      ...prevState,
+      lat: query.geometry.location.lat,
+      lng: query.geometry.location.lng,
+    }));
+
+    // Send only the place name to the backend
+    try {
+      await axios.post('http://localhost:5000/api/v1/destination', {
+        city: query.name, // Only sending the city name
+      });
+    } catch (error) {
+      console.error('Error sending data to backend:', error);
     }
 
-    const mockData = [
-        {
-            name: "New York",
-            image: "https://media.geeksforgeeks.org/wp-content/uploads/20240321072009/landmark-statue-liberty-new-york-city-famous-landscape-buildings-statue-liberty-uas-tourist-attraction-design-postcard-travel-poster-vector-illustration_1150-56573-compressed.jpg"
-        },
-        {
-            name: "Venice",
-            image: "https://media.geeksforgeeks.org/wp-content/uploads/20240321072310/travel-around-world-colorful-poster_52683-28357.jpg"
-        },
-        {
-            name: "Gangtok",
-            image: "https://media.geeksforgeeks.org/wp-content/uploads/20240321072631/flat-ski-station_23-2148010938.jpg"
-        },
-        {
-            name: "Cairo",
-            image: "https://media.geeksforgeeks.org/wp-content/uploads/20240321072500/egyptian-night-desert-pyramids-sphinx-anubis_107791-1591.jpg"
-        },
-    ]
+    setPlaces([]); // Clear the search results after selection
+  };
 
-    return (
-        <div className='home'>
-            <Navbar />
-            <div className="home-wrapper">
-                <div className="map">
-                    <div className="search">
-                        <div className="search-bar">
-                            <input placeholder='Search places' type="text"
-                                name='place' id='place' value={value}
-                                onChange={(e) => setValue(e.target.value)} />
-                        </div>
-                        <div className="searches">
-                            {
-                                places?.map((items, index) => {
-                                    return (
-                                        <div key={index} onClick={() => handleClick(items)}>
-                                            <p>{items.place_name}</p>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                    <Link to={`/destination/${value}`}>
-                        <Map
-                            {...viewState}
-                            onMove={evt => setViewState(evt.viewState)}
-                            style={{ width: 800, height: 400 }}
-                            mapStyle="mapbox://styles/mapbox/streets-v9"
-                            mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                        >
-                            <Marker className="marker"
-                                longitude={viewState.longitude}
-                                latitude={viewState.latitude} color="red" />
-                        </Map>
-                    </Link>
-                </div>
-                <h1 className='head'>Recommendations for you</h1>
-                <div className="recommendations">
-                    {mockData.map((d, index) => (
-                        <RecCard key={index} image={d.image} name={d.name} />
-                    ))}
-                </div>
+  const mockData = [
+    {
+      name: 'New York',
+      image:
+        'https://media.geeksforgeeks.org/wp-content/uploads/20240321072009/landmark-statue-liberty-new-york-city-famous-landscape-buildings-statue-liberty-uas-tourist-attraction-design-postcard-travel-poster-vector-illustration_1150-56573-compressed.jpg',
+    },
+    {
+      name: 'Venice',
+      image:
+        'https://media.geeksforgeeks.org/wp-content/uploads/20240321072310/travel-around-world-colorful-poster_52683-28357.jpg',
+    },
+    {
+      name: 'Gangtok',
+      image:
+        'https://media.geeksforgeeks.org/wp-content/uploads/20240321072631/flat-ski-station_23-2148010938.jpg',
+    },
+    {
+      name: 'Cairo',
+      image:
+        'https://media.geeksforgeeks.org/wp-content/uploads/20240321072500/egyptian-night-desert-pyramids-sphinx-anubis_107791-1591.jpg',
+    },
+  ];
+
+  if (!isLoaded) return <div>Loading...</div>;
+
+  return (
+    <div className='home'>
+      <Navbar />
+      <div className='home-wrapper'>
+        <div className='map'>
+          <div className='search'>
+            <div className='search-bar'>
+              <input
+                placeholder='Search places'
+                type='text'
+                name='place'
+                id='place'
+                value={value}
+                onChange={(e) => setValue(e.target.value)} // Set value based on user input
+              />
             </div>
+            <div className='searches'>
+              {places?.map((item, index) => (
+                <div key={index} onClick={() => handleClick(item)}>
+                  <p>{item.name}</p> {/* Show place name */}
+                </div>
+              ))}
+            </div>
+          </div>
+          <Link to={`/destination/${value}`}>
+            <GoogleMap
+              center={{ lat: viewState.lat, lng: viewState.lng }} // Display map centered at selected location
+              zoom={viewState.zoom}
+              mapContainerStyle={{ width: '800px', height: '400px' }}
+            >
+              <Marker position={{ lat: viewState.lat, lng: viewState.lng }} />
+            </GoogleMap>
+          </Link>
         </div>
-    )
-}
+        <h1 className='head'>Recommendations for you</h1>
+        <div className='recommendations'>
+          {mockData.map((d, index) => (
+            <RecCard key={index} image={d.image} name={d.name} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default Home
+export default Home;
