@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import json
+import logging
 import google.generativeai as genai
 import typing_extensions as typing
 from dotenv import load_dotenv
@@ -10,6 +11,8 @@ load_dotenv()
 genai.configure(api_key=getenv("AI_KEY"))
 
 model = genai.GenerativeModel("gemini-1.5-flash")
+
+log = logging.getLogger()
 
 
 class TouristAttractions(typing.TypedDict):
@@ -28,6 +31,7 @@ def generate_tourist_places(city_name):
         Tourist attractions in json format
 
     """
+    log.info(f"Generating Tourist Attractions in {city_name}")
 
     prompt = f"Generate five Tourist attractions in {city_name} \
             in json format containing the name only"
@@ -38,8 +42,19 @@ def generate_tourist_places(city_name):
             response_schema=TouristAttractions,
         ),
     )
-    print(response.text)
-    return json.loads(response.text)
+    response = json.loads(response.text)
+    response["city"] = city_name
+
+    try:
+        assert "city" in response
+        assert "places" in response
+        assert len(response["places"]) == 5
+
+        log.info(f"Generated Tourist Attractions: {response}")
+        return response
+    except Exception:
+        log.error(f"Failed to Generate TouristAttractions in {city_name}")
+        return {"city": None, "places": None}
 
 
 def generate_city_desc(city, place=None):
