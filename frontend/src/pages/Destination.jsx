@@ -15,34 +15,7 @@ const Destination = () => {
     console.log("Musa");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [destinationData, setDestinationData] = useState({
-        cityName: "Tokyo, Japan",
-        description: "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene."
-    });
-
-    // Fetch destination data from backend
-    useEffect(() => {
-        fetch(`/api/dashboard?city=${city}`) // Pass the city parameter in the request
-            .then(response => response.json())
-            .then(data => {
-                setViewState({
-                    latitude: data.latitude || 35.6764,
-                    longitude: data.longitude || 139.7300,
-                    zoom: 10
-                });
-                setDestinationData({
-                    cityName: data.cityName || "Tokyo, Japan",
-                    description: data.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene."
-                });
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching destination data:', error);
-                setError('Failed to load destination data.');
-                setLoading(false);
-            });
-    }, [city]); // Depend on city parameter
-    
+    const [destinationData, setDestinationData] = useState(" ");
 
     const mapStyles = {
         height: "300px",
@@ -54,6 +27,30 @@ const Destination = () => {
         lng: viewState.longitude
     };
 
+    // Fetch destination data from backend
+    useEffect(() => {
+        fetch(`/api/v1/query_place?city=${city}`)
+          .then(response => response.json())
+          .then(data => {
+            setViewState({
+              latitude: data.latitude || 35.6764,
+              longitude: data.longitude || 139.7300,
+              zoom: 10,
+            });
+            setDestinationData({
+              cityName: data.city || "Tokyo, Japan",
+              description: data.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene.",
+            });
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error('Error fetching destination data:', error);
+            setError('Failed to load destination data.');
+            setLoading(false);
+          });
+      }, [city]);
+
+
     return (
         <div className='destination'>
             <Navbar />
@@ -63,7 +60,7 @@ const Destination = () => {
                 ) : (
                     <div>
                         <div className="header">
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240321072734/hand-drawn-japanese-castle-illustration_52683-46247-compressed.jpg" alt="" />
+                            <img src="http://127.0.0.1:5000/api/v1/get_image" alt="" />
                             <div className="details">
                                 <h1>{destinationData.cityName}</h1>
                                 <p>{destinationData.description}</p>

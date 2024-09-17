@@ -10,15 +10,16 @@ const Dashboard = () => {
   const [message, setMessage] = useState({});
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/api/v1/get_city_data?city=Lagos')
-      .then((response) => {
+    axios.get(`http://127.0.0.1:5000/api/v1/trip`)
+      .then(response => {
         setCityPlaces(response.data.city_places.places);
         setMessage(response.data.message);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("There was an error fetching the data!", error);
       });
   }, []);
+
 
   return (
     <div className='bg-blue-400'>
