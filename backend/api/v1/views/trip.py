@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Module handles all authentications"""
+import logging
 from api.v1.views import app_views
 from models.trip import Trip
 from models.weather import Weather
@@ -9,10 +10,12 @@ from api.v1.utils.utils import (
     get_lat_lon,
     get_weather_details,
     get_picture_of_places,
-    get_current_user
+    get_current_user,
 )
 from api.v1.utils.ai import generate_tourist_places
 from flask_jwt_extended import jwt_required
+
+log = logging.getLogger()
 
 
 @app_views.route("/place", methods=["POST"], strict_slashes=False)
@@ -68,20 +71,28 @@ def get_place_info():
     Returns:
             json: details about the place with weather details
     """
+
     data = request.get_json()
     city_name = data.get("city")
 
-    print(city_name)
+    log.info(f"Getting info about {city_name}")
+
     lat, lon = get_lat_lon(city_name)
     weather_data = get_weather_details(lat, lon, city_name)
 
-    city_places = generate_tourist_places(city_name)
-    city_information = get_picture_of_places(city_places)
-
-    return (
-        jsonify({"message": weather_data, "city_places": city_information}),
-        200,
-    )
+    city_information = get_picture_of_places(city_name)
+    try:
+        assert city_information.get("information", 0) is not None
+        log.info(f"Got info about {city_name}")
+        return (
+            jsonify(
+                {"message": weather_data, "city_places": city_information}
+            ),
+            200,
+        )
+    except Exception:
+        log.error(f"Unable to get information about {city_name}")
+        return (jsonify({"mesage": "Unable to get information"}), 500)
 
 
 @app_views.route("/dashboard", methods=["GET"], strict_slashes=False)

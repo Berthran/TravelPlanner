@@ -1,14 +1,21 @@
 #!/usr/bin/python3
-import urllib.parse
+import logging
 import requests
+import urllib.parse
 from dotenv import load_dotenv
 from os import getenv, mkdir
-from api.v1.utils.ai import generate_city_desc, generate_city_keyword
+from api.v1.utils.ai import (
+    generate_city_desc,
+    generate_city_keyword,
+    generate_tourist_places,
+)
 from models.user import User
 from flask_jwt_extended import get_jwt_identity
 from models import storage
 
 load_dotenv()
+log = logging.getLogger()
+
 
 # Weather Parameters
 LOCATION_URL = getenv("LOCATION_API_URL")
@@ -66,34 +73,46 @@ def get_weather_details(latitude: float, longitude: float, city: str) -> dict:
     return weather
 
 
-def get_picture_of_places(city_places):
+def get_picture_of_places(city):
     """
         Get the picture of places in city
 
     Args:
-        city_places(dict): Dict containing city and places
+        city(str): Name of place
 
     Returns:
         Dict containing information and pictures
         about places in the city
 
     """
-    print(city_places)
+    city_places = generate_tourist_places(city)
     city = city_places["city"]
     places = city_places["places"]
-
     try:
+        assert city is not None
+        assert places is not None
         file_path = f"{IMAGE_LOCATION}/{city}"
         mkdir(file_path)
-    except FileExistsError:
-        pass
+    except Exception as e:
+        if isinstance(e, FileExistsError):
+            pass
+        else:
+            print(e)
+            return {"information": None}
 
     information = {"city": city, "places": []}
 
+    log.info(f"Getting pictures of {places} in {city} using google maps")
     for place in places:
-        desc = generate_city_desc(city, place)
         information["places"].append(get_picture_of_place(city, place))
-        information["places"][-1]["Description"] = desc
+        try:
+            assert information["places"][-1]["url_link"] is not None
+            desc = generate_city_desc(city, place)
+            information["places"][-1]["Description"] = desc
+        except Exception as e:
+            print(e)
+            log.error(f"No picture of {place} in {city}")
+            information["places"].pop()
 
     return information
 
@@ -110,6 +129,7 @@ def get_picture_of_place(city, place):
     Returns:
         Dict containing place and image name
     """
+    log.info(f"Getting picture of {place} in {city}")
     response = requests.get(
         MAP_LOCATION_URL,
         params={
@@ -123,7 +143,13 @@ def get_picture_of_place(city, place):
     if response.status_code != 200:
         return None
 
-    photos = response.json()["candidates"][0]["photos"]
+    response = response.json()
+    try:
+        assert response["status"] == "OK"
+    except Exception:
+        return {"Place": place, "url_link": None}
+
+    photos = response["candidates"][0]["photos"]
     photo_reference = photos[0]["photo_reference"]
 
     response = requests.get(
@@ -139,6 +165,7 @@ def get_picture_of_place(city, place):
     file_name = f"{place.split(' ')[0]}.png"
     save_image(city, file_name, response.content)
     url_link = create_url_link(city, file_name)
+    log.info(f"Got picture of {place} in {city}")
 
     return {"Place": place, "url_link": url_link}
 
