@@ -38,6 +38,7 @@ def generate_tourist_places(city_name):
             response_schema=TouristAttractions,
         ),
     )
+    print(response.text)
     return json.loads(response.text)
 
 

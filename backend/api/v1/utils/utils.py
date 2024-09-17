@@ -78,6 +78,7 @@ def get_picture_of_places(city_places):
         about places in the city
 
     """
+    print(city_places)
     city = city_places["city"]
     places = city_places["places"]
 
