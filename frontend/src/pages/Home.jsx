@@ -36,8 +36,9 @@ const Home = () => {
           });
   
           // Send the place name to the backend
+          console.log(place);
           axios
-            .post('http://localhost:3000/query_place', {
+            .post('http://127.0.0.1:5000/api/v1/query_place', {
               city: place.name, // Only sending the city name
             })
             .catch((error) => {
@@ -52,14 +53,14 @@ const Home = () => {
 
   const handleRecommendationClick = (city) => {
     axios
-      .post('http://localhost:3000/query_place', {
+      .post('http://127.0.0.1:5000/api/v1/query_place', {
         city, // Send the city name
       })
       .then((response) => {
         // Handle response if needed
         console.log('Place details:', response.data);
         // Redirect to destination page or update state as needed
-        window.location.href = `/destination/${city}`;
+        //window.location.href = `/destination/${city}`;
       })
       .catch((error) => {
         console.error('Error sending data to backend:', error);
