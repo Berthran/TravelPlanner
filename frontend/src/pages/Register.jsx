@@ -19,7 +19,7 @@ const Register = () => {
         setLoading(true); // Show loading indicator
     
         try {
-            await axios.post('http://localhost:5000/api/v1/signup', {
+            await axios.post('http://127.0.0.1:5000/api/v1/signup', {
                 email,
                 username,
                 password

@@ -25,7 +25,7 @@ def get_weather_condition():
     """
     data = request.get_json()
     user = get_current_user()
-    city_name = data.get("city_name")
+    city_name = data.get("city")
 
     lat, lon = get_lat_lon(city_name)
     weather_data = get_weather_details(lat, lon, city_name)
@@ -60,6 +60,7 @@ def get_weather_condition():
         200,
     )
 
+
 @app_views.route("/query_place", methods=["POST"], strict_slashes=False)
 def get_place_info():
     """Get weather condition of a place from city_name
@@ -68,8 +69,9 @@ def get_place_info():
             json: details about the place with weather details
     """
     data = request.get_json()
-    city_name = data.get("city_name")
+    city_name = data.get("city")
 
+    print(city_name)
     lat, lon = get_lat_lon(city_name)
     weather_data = get_weather_details(lat, lon, city_name)
 

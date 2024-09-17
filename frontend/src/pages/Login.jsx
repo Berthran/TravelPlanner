@@ -12,9 +12,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiClient.post('/auth/login', { email, password });
+            const response = await apiClient.post('/login', { email, password });
             localStorage.setItem('token', response.data.token);
-            navigate('/dashboard'); // Redirect after successful login
+            navigate('/'); // Redirect after successful login
         } catch (error) {
             console.error('Login error:', error);
         }

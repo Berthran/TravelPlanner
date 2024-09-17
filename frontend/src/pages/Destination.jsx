@@ -12,6 +12,7 @@ const Destination = () => {
         zoom: 10
     });
 
+    console.log("Musa");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [destinationData, setDestinationData] = useState({
