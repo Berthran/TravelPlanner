@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { Link, useParams } from 'react-router-dom'; // Import useParams and Link
+import { Link, useParams, useNavigate } from 'react-router-dom'; // Added useNavigate
 import Navbar from '../components/Navbar';
 import "../styles/destination.scss";
 
 const Destination = () => {
-    const { city } = useParams(); // Get the city parameter from the URL
+    const { city } = useParams();
+    const navigate = useNavigate(); 
     const [viewState, setViewState] = useState({
-        latitude: 35.6764,  // Default latitude (Tokyo, Japan)
-        longitude: 139.7300, // Default longitude (Tokyo, Japan)
+        latitude: 35.6764,
+        longitude: 139.7300,
         zoom: 10
     });
 
-    console.log("Musa");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [destinationData, setDestinationData] = useState(" ");
+    const [destinationData, setDestinationData] = useState({});
 
     const mapStyles = {
         height: "300px",
-        width: "100%"  // Adjust to make it responsive
+        width: "100%"
     };
 
     const defaultCenter = {
@@ -27,7 +27,6 @@ const Destination = () => {
         lng: viewState.longitude
     };
 
-    // Fetch destination data from backend
     useEffect(() => {
         fetch(`http://127.0.0.1:5000/api/v1/load_place?city=${city}`)
           .then(response => response.json())
@@ -41,7 +40,7 @@ const Destination = () => {
               url_link: data.message.url_link,
               keywords: data.message.keywords,
               cityName: data.city_places.city || "Tokyo, Japan",
-              description: data.message.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene.",
+              description: data.message.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation.",
             });
             setLoading(false);
           })
@@ -50,8 +49,11 @@ const Destination = () => {
             setError('Failed to load destination data.');
             setLoading(false);
           });
-      }, [city]);
+    }, [city]);
 
+    const handlePlanTripClick = () => {
+        navigate(`/planTrip/${city}`);
+    };
 
     return (
         <div className='destination'>
@@ -69,9 +71,7 @@ const Destination = () => {
                                 <section>
                                     {destinationData.keywords}
                                 </section>
-                                <Link to={`/planTrip/${city}`} className="plan-trip-link">
-                                    <button>Plan Trip to {destinationData.cityName}</button>
-                                </Link>
+                                <button onClick={handlePlanTripClick}>Plan Trip to {destinationData.cityName}</button>
                             </div>
                         </div>
                         <div className="location-map">
