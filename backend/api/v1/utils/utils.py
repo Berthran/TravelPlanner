@@ -116,7 +116,9 @@ def get_weather_info(latitude, longitude, city):
     )
 
     if response.status_code != 200:
-        log.error(f"Unable to get weather information about {city}")
+        log.error(
+            f"Unable to get weather information about {city}: {response}"
+        )
         return None
 
     response = response.json()
@@ -160,9 +162,9 @@ def get_picture_of_place(city, place=None):
 
     response = response.json()
     try:
-        assert response["status"] == "OK"
+        assert "photos" in response.get("candidates", {})[0]
     except Exception as e:
-        log.info(f"Unable to get picture of {city}: {e}")
+        log.error(f"Unable to get picture of {city}: {e}")
         return None
 
     photos = response["candidates"][0]["photos"]

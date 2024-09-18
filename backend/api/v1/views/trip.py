@@ -52,8 +52,8 @@ def save_place():
             jsonify({"message": "Information saved"}),
             200,
         )
-    except Exception:
-        log.error(f"Unable to save information about {city_name}")
+    except Exception as e:
+        log.error(f"Unable to save information about {city_name}: {e}")
         return (jsonify({"mesage": "Unable to get information"}), 500)
 
 

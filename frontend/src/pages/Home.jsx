@@ -89,7 +89,7 @@ const Home = () => {
               city: place.name, // Only sending the city name
             })
             .then((response) => {
-              console.log("Place details", response.data);
+              console.log("Place.details", response.data);
               window.location.href = `/destination/${place.name}`;
             })
             .catch((error) => {

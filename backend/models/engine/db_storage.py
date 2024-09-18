@@ -23,16 +23,18 @@ class DBStorage:
 
     def __init__(self):
         """Initialize the DBStorage"""
-        DB_USER = getenv('DB_USER')
-        DB_PASSWORD = getenv('DB_PASSWORD')
-        DB_HOST = getenv('DB_HOST', 'localhost')
-        DB_PORT = getenv('DB_PORT', '3306')
-        DB_NAME = getenv('DB_NAME')
+        DB_USER = getenv("DB_USER")
+        DB_PASSWORD = getenv("DB_PASSWORD")
+        DB_HOST = getenv("DB_HOST", "localhost")
+        DB_PORT = getenv("DB_PORT", "3306")
+        DB_NAME = getenv("DB_NAME")
 
         self.__engine = create_engine(
-            f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+            f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
         )
-        self.__session = scoped_session(sessionmaker(bind=self.__engine, expire_on_commit=False))
+        self.__session = scoped_session(
+            sessionmaker(bind=self.__engine, expire_on_commit=False)
+        )
 
         Base.metadata.create_all(self.__engine)
 
@@ -48,11 +50,19 @@ class DBStorage:
         if cls:
             if isinstance(cls, str):
                 cls = classes.get(cls)
-            return {f"{obj.__class__.__name__}.{obj.id}": obj for obj in self.__session.query(cls).all()}
+            return {
+                f"{obj.__class__.__name__}.{obj.id}": obj
+                for obj in self.__session.query(cls).all()
+            }
         else:
             all_objects = {}
             for class_name in classes.values():
-                all_objects.update({f"{obj.__class__.__name__}.{obj.id}": obj for obj in self.__session.query(class_name).all()})
+                all_objects.update(
+                    {
+                        f"{obj.__class__.__name__}.{obj.id}": obj
+                        for obj in self.__session.query(class_name).all()
+                    }
+                )
             return all_objects
 
     def new(self, obj):
@@ -70,7 +80,9 @@ class DBStorage:
     def reload(self):
         """Create all tables in the database and initialize a new session"""
         Base.metadata.create_all(self.__engine)
-        self.__session = scoped_session(sessionmaker(bind=self.__engine, expire_on_commit=False))
+        self.__session = scoped_session(
+            sessionmaker(bind=self.__engine, expire_on_commit=False)
+        )
 
     def delete(self, obj=None):
         """Deletes a data from database

@@ -8,77 +8,78 @@ from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
-	"""User model
+    """User model
 
-	Args:
-		BaseModel (class): the base model of class
-		Base (declarative base): the table model
-	"""
-	__tablename__ = 'users'
-	username = Column(String(128), nullable=False)
-	__password = Column('password', String(1024), nullable=False)
-	__email = Column('email', String(128), nullable=False)
-	
-	trips = relationship("Trip", back_populates="user")
+    Args:
+            BaseModel (class): the base model of class
+            Base (declarative base): the table model
+    """
 
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		if kwargs:
-			for key, value in kwargs.items():
-				if key != "__class__" and hasattr(self, key):
-					setattr(self, key, value)
+    __tablename__ = "users"
+    username = Column(String(128), nullable=False)
+    __password = Column("password", String(1024), nullable=False)
+    __email = Column("email", String(128), nullable=False)
 
-	@property
-	def password(self):
-		"""Retrieves the users password"""
-		return self.__password
+    trips = relationship("Trip", back_populates="user")
 
-	@password.setter
-	def password(self, value: str):
-		"""Set new password of user
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__" and hasattr(self, key):
+                    setattr(self, key, value)
 
-		Args:
-			value (str): the new password of user
-		"""
-		self.__password = generate_password_hash(value)
+    @property
+    def password(self):
+        """Retrieves the users password"""
+        return self.__password
 
-	def check_password(self, password):
-		"""Validate user's password
+    @password.setter
+    def password(self, value: str):
+        """Set new password of user
 
-		Args:
-			password (hashed_password): the password to check
+        Args:
+                value (str): the new password of user
+        """
+        self.__password = generate_password_hash(value)
 
-		Returns:
-			bool: True | False
-		"""
-		return check_password_hash(self.__password, password)
+    def check_password(self, password):
+        """Validate user's password
 
-	@property
-	def email(self):
-		"""Retrieves user email"""
-		return self.__email
+        Args:
+                password (hashed_password): the password to check
 
-	@email.setter
-	def email(self, value: str):
-		"""Sets email of user
+        Returns:
+                bool: True | False
+        """
+        return check_password_hash(self.__password, password)
 
-		Args:
-			value (str): the new email
+    @property
+    def email(self):
+        """Retrieves user email"""
+        return self.__email
 
-		Raises:
-			ValueError: Invalid email
-		"""
-		regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
-		if re.match(regex, value):
-			self.__email = value
-		else:
-			raise ValueError('Invalid Email')
+    @email.setter
+    def email(self, value: str):
+        """Sets email of user
 
-	def to_dict(self):
-		"""Dictionary repr of password with password removed"""
-		dictionary = super().to_dict()
-		if '_User__email' in dictionary:
-			dictionary['email'] = dictionary['_User__email']
-			del dictionary['_User__email']
-		del dictionary['_User__password']
-		return dictionary
+        Args:
+                value (str): the new email
+
+        Raises:
+                ValueError: Invalid email
+        """
+        regex = r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$"
+        if re.match(regex, value):
+            self.__email = value
+        else:
+            raise ValueError("Invalid Email")
+
+    def to_dict(self):
+        """Dictionary repr of password with password removed"""
+        dictionary = super().to_dict()
+        if "_User__email" in dictionary:
+            dictionary["email"] = dictionary["_User__email"]
+            del dictionary["_User__email"]
+        del dictionary["_User__password"]
+        return dictionary

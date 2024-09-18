@@ -35,7 +35,8 @@ def generate_tourist_places(city_name):
     response = model.generate_content(
         prompt,
         generation_config=genai.GenerationConfig(
-            response_mime_type="application/json", response_schema=TouristAttractions
+            response_mime_type="application/json",
+            response_schema=TouristAttractions,
         ),
     )
     return json.loads(response.text)["places"]
