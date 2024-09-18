@@ -76,10 +76,10 @@ const Destination = () => {
                                     {destinationData.keywords}
                                 </section>
                                 <section>
-                                    <button>{destinationData.humidity}</button>
-                                    <button>{destinationData.temperature} </button>
-                                    <button>{destinationData.weather}</button>
-                                    <button>{destinationData.wind_speed}</button> 
+                                    <button>Humidity: {destinationData.humidity}</button>
+                                    <button>Temperature: {destinationData.temperature} </button>
+                                    <button>Weather: {destinationData.weather}</button>
+                                    <button>Wind speed: {destinationData.wind_speed}</button> 
                                 </section>
                                 <button onClick={handlePlanTripClick}>Plan Trip to {destinationData.cityName}</button>
                             </div>
