@@ -58,6 +58,7 @@ jwt = JWTManager(app)
 # For images
 try:
     os.mkdir("api/v1/images")
+    os.mkdir("api/v1/place_info")
 except FileExistsError:
     pass
 

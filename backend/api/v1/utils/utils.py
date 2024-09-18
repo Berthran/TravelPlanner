@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import json
 import logging
 import requests
 import urllib.parse
@@ -30,6 +31,9 @@ MAP_PICTURE_URL = getenv("MAP_PICTURE_URL")
 # IMAGE_URL
 IMAGE_URL = getenv("IMAGE_URL")
 IMAGE_LOCATION = getenv("IMAGE_LOCATION")
+
+# PLACE INFO
+PLACE_INFO_LOCATION = getenv("PLACE_INFO_LOCATION")
 
 
 def get_lat_lon(city_name: str) -> tuple:
@@ -212,3 +216,38 @@ def get_current_user():
     if user_id:
         return storage.get(User, user_id)
     return None
+
+
+def save_information(place_info, file_name):
+    """
+        Save place information
+
+    Args:
+        place_info(dict): Information about Place
+        file_name(str): Name of file information is saved
+    """
+    with open(f"{PLACE_INFO_LOCATION}/{file_name}.json", 'w') as f:
+        json.dump(place_info, f)
+        log.info(f"{file_name} information saved")
+        return 0
+
+    return -1
+
+
+def load_information(file_name):
+    """
+        Load information about place
+
+    Args:
+        file_name(str): Name of file
+
+    Returns:
+        data if present else None
+    """
+    try:
+        with open(f"{PLACE_INFO_LOCATION}/{file_name}.json") as f:
+            data = json.load(f)
+            return data
+    except Exception:
+        log.warning(f"No information about {file_name} yet")
+        return None

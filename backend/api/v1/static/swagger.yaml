@@ -180,6 +180,41 @@ paths:
                   message:
                     type: string
 
+  /load_place:
+    get:
+      summary: Load information of place.
+      description: Get information of place after the query_place
+      parameters:
+        - in: query
+          name: city
+          schema:
+            type: string
+            example: "Lagos"
+      responses:
+        '200':
+          description: Place Info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "{weather: }"
+        '500':
+          description: No information available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No information"
+
+
+
+
   /dashboard:
     get:
       summary: Get all trips of user and weather data

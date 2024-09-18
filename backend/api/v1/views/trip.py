@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Module handles all authentications"""
+import json
 import logging
 from api.v1.views import app_views
 from models.trip import Trip
@@ -11,6 +12,8 @@ from api.v1.utils.utils import (
     get_weather_details,
     get_picture_of_places,
     get_current_user,
+    save_information,
+    load_information
 )
 from api.v1.utils.ai import generate_tourist_places
 from flask_jwt_extended import jwt_required
@@ -83,16 +86,35 @@ def get_place_info():
     city_information = get_picture_of_places(city_name)
     try:
         assert city_information.get("information", 0) is not None
+        weather_data["url_link"] = city_information["places"][0]["url_link"]
         log.info(f"Got info about {city_name}")
+        place_info = {"message": weather_data, "city_places": city_information}
+        status = save_information(place_info, city_name)
+        assert status == 0
         return (
             jsonify(
-                {"message": weather_data, "city_places": city_information}
+                {"message": "Information saved"}
             ),
             200,
         )
     except Exception:
         log.error(f"Unable to get information about {city_name}")
         return (jsonify({"mesage": "Unable to get information"}), 500)
+
+
+@app_views.route("/load_place", methods=["GET"], strict_slashes=False)
+def load_place():
+    """
+        Load Information about place
+    """
+    place = request.args.get("city")
+    log.info(f"Loading information about {place}")
+    data = load_information(place)
+    if data is None:
+        return (jsonify({"message": "No information"}), 500)
+
+    log.info(f"Loaded information about {place}")
+    return (jsonify(data), 200)
 
 
 @app_views.route("/dashboard", methods=["GET"], strict_slashes=False)
