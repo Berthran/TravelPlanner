@@ -103,6 +103,7 @@ export default function PlanTrip() {
     };
 
     return (
+        <div className="destination">
         <div className="plan-trip-container">
             {city ? (
                 <h1>Start Planning Trip to {city}</h1>
@@ -242,6 +243,8 @@ export default function PlanTrip() {
                     {submitting ? 'Saving...' : 'Save Trip Plan'}
                 </button>
             </form>
+        </div>            
         </div>
+
     );
 }
