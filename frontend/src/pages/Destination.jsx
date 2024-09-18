@@ -33,8 +33,8 @@ const Destination = () => {
           .then(response => response.json())
           .then(data => {
             setViewState({
-              latitude: data.latitude || 35.6764,
-              longitude: data.longitude || 139.7300,
+              latitude: data.message.latitude || 35.6764,
+              longitude: data.message.longitude || 139.7300,
               zoom: 10,
             });
             setDestinationData({

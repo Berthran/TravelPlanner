@@ -69,6 +69,8 @@ def get_weather_details(latitude: float, longitude: float, city: str) -> dict:
     )
     data = r.json()
     weather["temperature"] = data.get("main").get("temp")
+    weather["latitude"] = latitude
+    weather["longitude"] = longitude
     weather["weather"] = data.get("weather")[0].get("main")
     weather["wind_speed"] = data.get("wind").get("speed")
     weather["humidity"] = data.get("main").get("humidity")
