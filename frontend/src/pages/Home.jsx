@@ -84,7 +84,6 @@ const Home = () => {
           });
 
           // Send the place name to the backend
-          console.log(place);
           axios
             .post('http://127.0.0.1:5000/api/v1/query_place', {
               city: place.name, // Only sending the city name
