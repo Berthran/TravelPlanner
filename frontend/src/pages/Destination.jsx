@@ -32,19 +32,19 @@ const Destination = () => {
           .then(response => response.json())
           .then(data => {
             setViewState({
-              latitude: data.message.latitude,
-              longitude: data.message.longitude,
+              latitude: data.latitude,
+              longitude: data.longitude,
               zoom: 10,
             });
             setDestinationData({
-              url_link: data.message.url_link,
-              keywords: data.message.keywords,
-              cityName: data.city_places.city,
-              description: data.message.description ,
-              humidity: data.message.humidity,
-              temperature: data.message.temperature ,
-              weather: data.message.weather ,
-              wind_speed: data.message.wind_speed ,
+              url_link: data.url_link,
+              keywords: data.keywords,
+              cityName: data.city,
+              description: data.description ,
+              humidity: data.humidity,
+              temperature: data.temperature ,
+              weather: data.weather ,
+              wind_speed: data.wind_speed ,
             });
             setLoading(false);
           })

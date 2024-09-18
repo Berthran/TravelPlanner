@@ -22,7 +22,7 @@ const Home = () => {
 
   const handleRecommendationClick = (city) => {
     axios
-      .post('http://127.0.0.1:5000/api/v1/query_place', {
+      .post('http://127.0.0.1:5000/api/v1/save_place', {
         city,
       })
       .then((response) => {
@@ -37,7 +37,7 @@ const Home = () => {
 
   const handleSearchSubmit = () => {
     axios
-      .post('http://127.0.0.1:5000/api/v1/query_place', {
+      .post('http://127.0.0.1:5000/api/v1/save_place', {
         city: value,
       })
       .then((response) => {
@@ -85,8 +85,12 @@ const Home = () => {
 
           // Send the place name to the backend
           axios
-            .post('http://127.0.0.1:5000/api/v1/query_place', {
+            .post('http://127.0.0.1:5000/api/v1/save_place', {
               city: place.name, // Only sending the city name
+            })
+            .then((response) => {
+              console.log("Place details", response.data);
+              window.location.href = `/destination/${place.name}`;
             })
             .catch((error) => {
               console.error('Error sending data to backend:', error);

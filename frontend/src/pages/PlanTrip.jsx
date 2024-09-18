@@ -53,12 +53,12 @@ export default function PlanTrip() {
 
     const calculateTotalBudget = () => {
         return (
-            parseFloat(tripData.accommodation.price) +
-            parseFloat(tripData.flights.departure.price) +
-            parseFloat(tripData.flights.return.price) +
-            parseFloat(tripData.transport.cost) +
-            parseFloat(tripData.meals.price) +
-            parseFloat(tripData.activities.price)
+            Number.parseFloat(tripData.accommodation.price) +
+            Number.parseFloat(tripData.flights.departure.price) +
+            Number.parseFloat(tripData.flights.return.price) +
+            Number.parseFloat(tripData.transport.cost) +
+            Number.parseFloat(tripData.meals.price) +
+            Number.parseFloat(tripData.activities.price)
         );
     };
 
