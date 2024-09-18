@@ -74,10 +74,13 @@ def save_place():
 
 	log.info(f"Saving info about {city_name}")
 
-	lat, lon = get_lat_lon(city_name)
-	place_info = get_place_info(lat, lon, city_name)
 
 	try:
+		coordinates = get_lat_lon(city_name)
+		assert coordinates is not None
+		lat = coordinates["lat"]
+		lon = coordinates["lon"]
+		place_info = get_place_info(lat, lon, city_name)
 		assert place_info is not None
 		status = save_information(place_info, city_name)
 		assert status == 0

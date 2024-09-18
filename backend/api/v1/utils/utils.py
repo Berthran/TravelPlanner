@@ -42,14 +42,29 @@ def get_lat_lon(city_name: str) -> tuple:
             city_name (str): the city name
 
     Returns:
-            tuple: (lat, lon)
+            Dict: (lat, lon)
     """
+    log.info(f"Getting coordinates of {city_name}")
+    response = requests.get(
+            LOCATION_URL,
+            params={
+                "q": city_name,
+                "appid": API_KEY
+                }
+    )
+    if response.status_code != 200:
+        log.error(f"Unable to get coordinates of {city_name}: {response}")
+        return None
+    response = response.json()
 
-    r = requests.get(f"{LOCATION_URL}?q={city_name}&appid={API_KEY}")
-    data = r.json()
-    lat = data[0].get("lat")
-    lon = data[0].get("lon")
-    return (lat, lon)
+    try:
+        assert len(response) != 0
+        lat = response[0].get("lat")
+        lon = response[0].get("lon")
+        return {"lat": lat, "lon": lon}
+    except Exception as e:
+        log.error(f"Unable to get coordinates of {city_name}: {e}")
+        return None
 
 
 def get_place_info(latitude: float, longitude: float, city: str) -> dict:
