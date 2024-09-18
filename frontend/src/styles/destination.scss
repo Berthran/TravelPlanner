@@ -4,6 +4,13 @@
 
     .destination-container {
 
+        button {
+            background-color: var(--light-pink);
+            font-weight: bold;
+            width: 200px;
+            border-radius: 10px;
+        }
+
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -49,10 +56,11 @@
 
                 section {
                     text-align: center;
-                    padding: 20px;
+                    padding: 5px;
                     background-color: var(--light-pink);
                     font-size: 1.1rem;
-                    width: 200px;
+                    width: 500px;
+                    font-weight: 600;
                     margin-top: 20px;
 
                     span {

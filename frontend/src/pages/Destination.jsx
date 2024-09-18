@@ -19,7 +19,7 @@ const Destination = () => {
 
     const mapStyles = {
         height: "300px",
-        width: "80%"  // Adjust to make it responsive
+        width: "100%"  // Adjust to make it responsive
     };
 
     const defaultCenter = {
@@ -29,7 +29,7 @@ const Destination = () => {
 
     // Fetch destination data from backend
     useEffect(() => {
-        fetch(`/api/v1/query_place?city=${city}`)
+        fetch(`http://127.0.0.1:5000/api/v1/load_place?city=${city}`)
           .then(response => response.json())
           .then(data => {
             setViewState({
@@ -38,8 +38,10 @@ const Destination = () => {
               zoom: 10,
             });
             setDestinationData({
-              cityName: data.city || "Tokyo, Japan",
-              description: data.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene.",
+              url_link: data.message.url_link,
+              keywords: data.message.keywords,
+              cityName: data.city_places.city || "Tokyo, Japan",
+              description: data.message.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation. It boasts iconic landmarks like the Tokyo Tower and Skytree, bustling districts like Shibuya and Shinjuku, serene shrines and temples, and a diverse culinary scene.",
             });
             setLoading(false);
           })
@@ -60,12 +62,12 @@ const Destination = () => {
                 ) : (
                     <div>
                         <div className="header">
-                            <img src="http://127.0.0.1:5000/api/v1/get_image" alt="" />
+                            <img src={destinationData.url_link} alt="" />
                             <div className="details">
                                 <h1>{destinationData.cityName}</h1>
                                 <p>{destinationData.description}</p>
                                 <section>
-                                    {/* Add any dynamic travel info, budget, duration, etc. */}
+                                    {destinationData.keywords}
                                 </section>
                                 <Link to={`/planTrip/${city}`} className="plan-trip-link">
                                     <button>Plan Trip to {destinationData.cityName}</button>
