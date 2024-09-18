@@ -8,8 +8,8 @@ const Destination = () => {
     const { city } = useParams();
     const navigate = useNavigate(); 
     const [viewState, setViewState] = useState({
-        latitude: 35.6764,
-        longitude: 139.7300,
+        latitude,
+        longitude,
         zoom: 10
     });
 
@@ -32,15 +32,19 @@ const Destination = () => {
           .then(response => response.json())
           .then(data => {
             setViewState({
-              latitude: data.message.latitude || 35.6764,
-              longitude: data.message.longitude || 139.7300,
+              latitude: data.message.latitude,
+              longitude: data.message.longitude,
               zoom: 10,
             });
             setDestinationData({
               url_link: data.message.url_link,
               keywords: data.message.keywords,
-              cityName: data.city_places.city || "Tokyo, Japan",
-              description: data.message.description || "Tokyo, the capital of Japan, is a vibrant metropolis where traditional culture meets futuristic innovation.",
+              cityName: data.city_places.city,
+              description: data.message.description ,
+              humidity: data.message.humidity,
+              temperature: data.message.temperature ,
+              weather: data.message.weather ,
+              wind_speed: data.message.wind_speed ,
             });
             setLoading(false);
           })
@@ -70,6 +74,12 @@ const Destination = () => {
                                 <p>{destinationData.description}</p>
                                 <section>
                                     {destinationData.keywords}
+                                </section>
+                                <section>
+                                    <button>{destinationData.humidity}</button>
+                                    <button>{destinationData.temperature} </button>
+                                    <button>{destinationData.weather}</button>
+                                    <button>{destinationData.wind_speed}</button> 
                                 </section>
                                 <button onClick={handlePlanTripClick}>Plan Trip to {destinationData.cityName}</button>
                             </div>
