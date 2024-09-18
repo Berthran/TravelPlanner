@@ -12,7 +12,9 @@ export default function PlanTrip() {
     const [tripData, setTripData] = useState({
         startDate: null,
         endDate: null,
-        numberOfPeople: 1,
+        numberOfPeople: {
+            number: 1,
+        },
         accommodation: {
             name: '',
             price: 0
@@ -144,8 +146,8 @@ export default function PlanTrip() {
                     <label>No. of People:</label>
                     <input 
                         type="number" 
-                        name="numberOfPeople"
-                        value={tripData.numberOfPeople}
+                        name="number"
+                        value={tripData.numberOfPeople.number}
                         onChange={(e) => handleInputChange(e, 'numberOfPeople')}
                         min="1"
                     />
