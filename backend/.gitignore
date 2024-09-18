@@ -2,5 +2,6 @@
 travel_planner/
 __pycache__/
 images/
+place_info/
 .DS_Store
 .venv
