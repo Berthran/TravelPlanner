@@ -8,14 +8,17 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+	const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+		setError('');
         try {
             const response = await apiClient.post('/login', { email, password });
-            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('token', response.data.access_token);
             navigate('/'); // Redirect after successful login
         } catch (error) {
+			setError('Invalid email or password');
             console.error('Login error:', error);
         }
     };
@@ -48,6 +51,7 @@ const Login = () => {
                             required
                         />
                     </div>
+					{error && <p className='error'>{error}</p>} {/* Error message display */}
                     <div className='form__field'>
                         <input type='submit' value='Sign In' />
                     </div>
