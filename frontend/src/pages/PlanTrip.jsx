@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import "../styles/planTrip.scss";
+import AuthComponent from '../components/AuthComponent';
 
 export default function PlanTrip() {
     const { city } = useParams();
     const navigate = useNavigate();
     const [customCity, setCustomCity] = useState('');
     const [tripData, setTripData] = useState({
-        startDate: '',
-        endDate: '',
+        startDate: null,
+        endDate: null,
         numberOfPeople: 1,
         accommodation: {
             name: '',
@@ -16,11 +19,9 @@ export default function PlanTrip() {
         },
         flights: {
             departure: {
-                name: '',
                 price: 0
             },
             return: {
-                name: '',
                 price: 0
             }
         },
@@ -51,8 +52,15 @@ export default function PlanTrip() {
         }));
     };
 
+    const handleDateChange = (date, field) => {
+        setTripData(prevData => ({
+            ...prevData,
+            [field]: date
+        }));
+    };
+
     const calculateTotalBudget = () => {
-        return (
+        const baseTotal = (
             Number.parseFloat(tripData.accommodation.price) +
             Number.parseFloat(tripData.flights.departure.price) +
             Number.parseFloat(tripData.flights.return.price) +
@@ -60,6 +68,7 @@ export default function PlanTrip() {
             Number.parseFloat(tripData.meals.price) +
             Number.parseFloat(tripData.activities.price)
         );
+        return baseTotal * tripData.numberOfPeople;
     };
 
     const handleCustomCitySubmit = (e) => {
@@ -90,10 +99,8 @@ export default function PlanTrip() {
             if (!response.ok) {
                 throw new Error('Failed to save trip plan');
             }
-
+            //eslint-disable-next-line
             const result = await response.json();
-            console.log('Trip plan saved:', result);
-            // Optionally, navigate to a success page or show a success message
             alert('Trip plan saved successfully!');
         } catch (err) {
             setError(err.message);
@@ -125,29 +132,30 @@ export default function PlanTrip() {
             <form onSubmit={handleSubmit} className="form-container">
                 <div className="plan-input">
                     <label>Start Date:</label>
-                    <input 
-                        type="date" 
-                        name="startDate"
-                        value={tripData.startDate}
-                        onChange={(e) => handleInputChange(e, 'startDate')}
+                    <DatePicker
+                        selected={tripData.startDate}
+                        onChange={(date) => handleDateChange(date, 'startDate')}
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        showTimeSelect
                     />
                 </div>
                 <div className="plan-input">
                     <label>End Date:</label>
-                    <input 
-                        type="date" 
-                        name="endDate"
-                        value={tripData.endDate}
-                        onChange={(e) => handleInputChange(e, 'endDate')}
+                    <DatePicker
+                        selected={tripData.endDate}
+                        onChange={(date) => handleDateChange(date, 'endDate')}
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        showTimeSelect
                     />
                 </div>
                 <div className="plan-input">
-                    <label>No of People:</label>
+                    <label>No. of People:</label>
                     <input 
                         type="number" 
                         name="numberOfPeople"
                         value={tripData.numberOfPeople}
                         onChange={(e) => handleInputChange(e, 'numberOfPeople')}
+                        min="1"
                     />
                 </div>
 
@@ -169,6 +177,7 @@ export default function PlanTrip() {
                             name="price"
                             value={tripData.accommodation.price}
                             onChange={(e) => handleInputChange(e, 'accommodation')}
+                            min="0"
                         />
                     </div>
                 </div>
@@ -181,7 +190,8 @@ export default function PlanTrip() {
                             type="number" 
                             name="price" 
                             value={tripData.flights.departure.price} 
-                            onChange={(e) => handleInputChange(e, 'flights', 'departure')} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'departure')}
+                            min="0"
                         />
                     </div>
                     <div className="plan-input">
@@ -190,7 +200,8 @@ export default function PlanTrip() {
                             type="number" 
                             name="price" 
                             value={tripData.flights.return.price} 
-                            onChange={(e) => handleInputChange(e, 'flights', 'return')} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'return')}
+                            min="0"
                         />
                     </div>
                 </div>
@@ -203,7 +214,8 @@ export default function PlanTrip() {
                             type="number" 
                             name="cost" 
                             value={tripData.transport.cost} 
-                            onChange={(e) => handleInputChange(e, 'transport')} 
+                            onChange={(e) => handleInputChange(e, 'transport')}
+                            min="0"
                         />
                     </div>
                 </div>
@@ -216,7 +228,8 @@ export default function PlanTrip() {
                             type="number" 
                             name="price" 
                             value={tripData.meals.price} 
-                            onChange={(e) => handleInputChange(e, 'meals')} 
+                            onChange={(e) => handleInputChange(e, 'meals')}
+                            min="0"
                         />
                     </div>
                 </div>
@@ -229,22 +242,24 @@ export default function PlanTrip() {
                             type="number" 
                             name="price" 
                             value={tripData.activities.price} 
-                            onChange={(e) => handleInputChange(e, 'activities')} 
+                            onChange={(e) => handleInputChange(e, 'activities')}
+                            min="0"
                         />
                     </div>
-                </div>
 
+                </div>
                 <div>
-                    <h2>Total Budget: ${calculateTotalBudget().toFixed(2)}</h2>
+                    <h2>Total Budget: ${(calculateTotalBudget()).toFixed(2)}</h2>
                 </div>
 
                 {error && <div className="error">{error}</div>}
-                <button type="submit" disabled={submitting}>
-                    {submitting ? 'Saving...' : 'Save Trip Plan'}
-                </button>
+                <AuthComponent>
+                    <button type="submit" disabled={submitting}>
+                        {submitting ? 'Saving...' : 'Save Trip Plan'}
+                    </button>
+                </AuthComponent>
             </form>
         </div>            
         </div>
-
     );
 }
