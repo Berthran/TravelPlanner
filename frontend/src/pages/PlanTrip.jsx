@@ -57,16 +57,17 @@ export default function PlanTrip() {
         }));
     };
 
+    console.log(tripData);
     const calculateTotalBudget = () => {
         const baseTotal = (
             Number.parseFloat(tripData.accommodation.price) +
-            Number.parseFloat(tripData.flights.departure_price) +
-            Number.parseFloat(tripData.flights.return_price) +
+            Number.parseFloat(tripData.flights.departure.price) +
+            Number.parseFloat(tripData.flights.return.price) +
             Number.parseFloat(tripData.transport.cost) +
             Number.parseFloat(tripData.meals.price) +
             Number.parseFloat(tripData.activities.price)
         );
-        return baseTotal * tripData.numberOfPeople;
+        return baseTotal * tripData.numberOfPeople.number;
     };
 
     const handleCustomCitySubmit = (e) => {
