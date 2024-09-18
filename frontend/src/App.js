@@ -24,7 +24,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/planTrip"
+                    path="/planTrip/:city"
                     element={
                         <ProtectedRoute>
                             <PlanTrip />
