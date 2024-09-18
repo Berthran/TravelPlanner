@@ -17,7 +17,7 @@ Travel Planner is a handy tool to get travellers up to speed with travel prepara
   - Daniel Berthran
   - Felsi Vasitha
   - Wiseman Umanah
-  - Gilbert Henyo
+  - Gilbert Henyo <kofidaba@gmail.com>
   - Castro Omondi
   - Oluwamayowa Musa
 
