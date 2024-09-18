@@ -75,7 +75,7 @@ export default function PlanTrip() {
         setError(null);
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/v1/save_trip_plan', { // MUSA Replace with your backend API endpoint
+            const response = await fetch('http://127.0.0.1:5000/api/v1/plan_trip', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
