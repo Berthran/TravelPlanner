@@ -20,8 +20,12 @@ export default function PlanTrip() {
             price: 0
         },
         flights: {
-            departure_price: 0,
-            return_price: 0
+            departure: {
+                price: 0,
+            },
+            return: {
+                price: 0,
+            }
         },
         transport: {
             cost: 0
@@ -183,8 +187,9 @@ export default function PlanTrip() {
                         <input 
                             type="number" 
                             name="price" 
-                            value={tripData.flights.departure_price} 
+                            value={tripData.flights.departure.price} 
                             onChange={(e) => handleInputChange(e, 'flights', 'departure')} 
+                            min="0"
                         />
                     </div>
                     <div className="plan-input">
@@ -192,8 +197,9 @@ export default function PlanTrip() {
                         <input 
                             type="number" 
                             name="price" 
-                            value={tripData.flights.return_price} 
+                            value={tripData.flights.return.price} 
                             onChange={(e) => handleInputChange(e, 'flights', 'return')} 
+                            min="0"
                         />
                     </div>
                 </div>
