@@ -174,68 +174,65 @@ export default function PlanTrip() {
 
                 <div>
                     <h3>Flights</h3>
-
-                    <div className="plan-input">
-                        <label htmlFor>Enter Flight Name: </label>
-                        <input type="text" />
-                    </div>
                     <div className="plan-input">
                         <label>Flight Departure Price: $</label>
-                        <input type="number" value={flightDeparturePrice}
-                            onChange={(e) => setFlightDeparturePrice(e.target.value)} />
-                    </div>
-                    <div className="plan-input">
-                        <label htmlFor>Enter Flight Name: </label>
-                        <input type="text" />
+                        <input 
+                            type="number" 
+                            name="price" 
+                            value={tripData.flights.departure.price} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'departure')} 
+                        />
                     </div>
                     <div className="plan-input">
                         <label>Flight Return Price: $</label>
-                        <input type="number" value={flightReturnPrice}
-                            onChange={(e) => setFlightReturnPrice(e.target.value)} />
+                        <input 
+                            type="number" 
+                            name="price" 
+                            value={tripData.flights.return.price} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'return')} 
+                        />
                     </div>
                 </div>
+
                 <div>
                     <h3>Transportation</h3>
-
-                    <div className="plan-input">
-                        <label>Transport Type</label>
-                        <input type="text" />
-                    </div>
                     <div className="plan-input">
                         <label>Transport Cost: $</label>
-                        <input type="number" value={transportPrice}
-                            onChange={(e) => setTransportPrice(e.target.value)} />
+                        <input 
+                            type="number" 
+                            name="cost" 
+                            value={tripData.transport.cost} 
+                            onChange={(e) => handleInputChange(e, 'transport')} 
+                        />
                     </div>
                 </div>
+
                 <div>
                     <h3>Meals & Food</h3>
-
-                    <div className="plan-input">
-                        <label htmlFor>Enter Meals to Try: </label>
-                        <input type="text" />
-                    </div>
                     <div className="plan-input">
                         <label>Meals & Snacks Price: $</label>
-                        <input type="number" value={mealsPrice}
-                            onChange={(e) => setMealsPrice(e.target.value)} />
+                        <input 
+                            type="number" 
+                            name="price" 
+                            value={tripData.meals.price} 
+                            onChange={(e) => handleInputChange(e, 'meals')} 
+                        />
                     </div>
                 </div>
+
                 <div>
                     <h3>Activities & Tourist Spots</h3>
                     <div className="plan-input">
-                        <label htmlFor>Enter Activities to Try: </label>
-                        <input type="text" />
-                    </div>
-                    <div className="plan-input">
-                        <label htmlFor>Enter Tourist Spots to Explore: </label>
-                        <input type="text" />
-                    </div>
-                    <div className="plan-input">
                         <label>Activities & Tourist Spots Price: $</label>
-                        <input type="number" value={activitiesPrice}
-                            onChange={(e) => setActivitiesPrice(e.target.value)} />
+                        <input 
+                            type="number" 
+                            name="price" 
+                            value={tripData.activities.price} 
+                            onChange={(e) => handleInputChange(e, 'activities')} 
+                        />
                     </div>
                 </div>
+
                 <div>
                     <h2>Total Budget: ${calculateTotalBudget().toFixed(2)}</h2>
                 </div>

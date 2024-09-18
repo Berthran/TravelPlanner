@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { Link, useParams, useNavigate } from 'react-router-dom'; // Added useNavigate
+import { useParams, useNavigate } from 'react-router-dom'; // Added useNavigate
 import Navbar from '../components/Navbar';
 import "../styles/destination.scss";
 
@@ -8,8 +8,8 @@ const Destination = () => {
     const { city } = useParams();
     const navigate = useNavigate(); 
     const [viewState, setViewState] = useState({
-        latitude,
-        longitude,
+        latitude: 35.6762,
+        longitude: 139.6503,
         zoom: 10
     });
 
