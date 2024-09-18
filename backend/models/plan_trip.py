@@ -30,7 +30,7 @@ class PlanTrip(BaseModel, Base):
 	
 	activities_tourist_sport_price = Column(Float, nullable=False)
 
-	user_id = Column(String(100), ForeignKey("user.id"), nullable=False)
+	user_id = Column(String(100), ForeignKey("users.id"), nullable=False)
 
 	plan_trips = relationship("User", back_populates="plan_trips")
 
