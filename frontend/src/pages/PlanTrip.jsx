@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import "../styles/destination.scss";
+import "../styles/planTrip.scss";
 
 export default function PlanTrip() {
     const { city } = useParams();
@@ -103,7 +103,7 @@ export default function PlanTrip() {
     };
 
     return (
-        <div className="destination">
+        <div className="planTrip">
         <div className="plan-trip-container">
             {city ? (
                 <h1>Start Planning Trip to {city}</h1>
