@@ -11,7 +11,6 @@ def get_image():
     is gotten using query parameters
     """
     city = request.args.get("city")
-    place = request.args.get("place")
 
-    file_path = f"images/{city}/{place}.png"
+    file_path = f"images/{city}.png"
     return send_file(file_path, mimetype="image/png")

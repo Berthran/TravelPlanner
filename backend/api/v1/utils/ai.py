@@ -1,8 +1,6 @@
 #!/usr/bin/python3
-import json
 import logging
 import google.generativeai as genai
-import typing_extensions as typing
 from dotenv import load_dotenv
 from os import getenv
 
@@ -15,67 +13,50 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 log = logging.getLogger()
 
 
-class TouristAttractions(typing.TypedDict):
-    city: str
-    places: list[str]
-
-
-def generate_tourist_places(city_name):
+def generate_city_desc(city):
     """
-        Generate Tourist attractions in a place
+        Generate a description about city
 
     Args:
-        city_name(str): Name of place
+        city(str): Name of city
 
     Returns:
-        Tourist attractions in json format
-
+        description of city
     """
-    log.info(f"Generating Tourist Attractions in {city_name}")
-
-    prompt = f"Generate five Tourist attractions in {city_name} \
-            in json format containing the name only"
-    response = model.generate_content(
-        prompt,
-        generation_config=genai.GenerationConfig(
-            response_mime_type="application/json",
-            response_schema=TouristAttractions,
-        ),
-    )
-    response = json.loads(response.text)
-    response["city"] = city_name
+    log.info(f"Generating information about {city}")
+    prompt = f"I need you to give me a brief description of {city}, it should not be greater than 1020 letters/characters"
 
     try:
-        assert "city" in response
-        assert "places" in response
-        assert len(response["places"]) == 5
-
-        log.info(f"Generated Tourist Attractions: {response}")
-        return response
-    except Exception:
-        log.error(f"Failed to Generate TouristAttractions in {city_name}")
-        return {"city": None, "places": None}
+        response = model.generate_content(prompt)
+        log.info(f"Generated information about {city}")
+        return response.text
+    except Exception as e:
+        log.info(f"Unable to generate information about {city}: {e}")
+        return None
 
 
-def generate_city_desc(city, place=None):
-    if place is None:
-        prompt = (
-            f"I need you to give me a brief description of {city}, "
-            "it should not be greater than 1020 letters/characters"
-        )
-    else:
-        prompt = f"I need you to give a brief description of {place} in {city}"
+def generate_city_keyword(city):
+    """
+        Generate keywords about city
 
-    response = model.generate_content(prompt)
-    return response.text
+    Args:
+        city(str): Name of city
 
-
-def generate_city_keyword(city_name):
+    Returns:
+        Keywords relating to the city
+    """
     prompt = (
-        f"I need 3 to 5 keywords of this place, {city_name}. "
+        f"I need 3 to 5 keywords of this place, {city}. "
         "Send your response in this format (compulsory)e.g "
         "A, B, C, D separated by comma"
     )
-    response = model.generate_content(prompt)
-    data = (response.text).strip("\n")
-    return data
+
+    log.info(f"Generating keywords about {city}")
+    try:
+        response = model.generate_content(prompt)
+        data = (response.text).strip("\n")
+        log.info(f"Generated keywords about {city}")
+        return data
+    except Exception as e:
+        log.info(f"Unable to generate keywords about {city}: {e}")
+        return None
