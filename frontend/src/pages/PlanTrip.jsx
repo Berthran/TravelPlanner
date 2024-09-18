@@ -18,24 +18,16 @@ export default function PlanTrip() {
             price: 0
         },
         flights: {
-            departure: {
-                price: 0
-            },
-            return: {
-                price: 0
-            }
+            departure_price: 0,
+            return_price: 0
         },
         transport: {
-            type: '',
             cost: 0
         },
         meals: {
-            toTry: '',
             price: 0
         },
         activities: {
-            toTry: '',
-            touristSpots: '',
             price: 0
         }
     });
@@ -62,8 +54,8 @@ export default function PlanTrip() {
     const calculateTotalBudget = () => {
         const baseTotal = (
             Number.parseFloat(tripData.accommodation.price) +
-            Number.parseFloat(tripData.flights.departure.price) +
-            Number.parseFloat(tripData.flights.return.price) +
+            Number.parseFloat(tripData.flights.departure_price) +
+            Number.parseFloat(tripData.flights.return_price) +
             Number.parseFloat(tripData.transport.cost) +
             Number.parseFloat(tripData.meals.price) +
             Number.parseFloat(tripData.activities.price)
@@ -189,9 +181,8 @@ export default function PlanTrip() {
                         <input 
                             type="number" 
                             name="price" 
-                            value={tripData.flights.departure.price} 
-                            onChange={(e) => handleInputChange(e, 'flights', 'departure')}
-                            min="0"
+                            value={tripData.flights.departure_price} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'departure')} 
                         />
                     </div>
                     <div className="plan-input">
@@ -199,9 +190,8 @@ export default function PlanTrip() {
                         <input 
                             type="number" 
                             name="price" 
-                            value={tripData.flights.return.price} 
-                            onChange={(e) => handleInputChange(e, 'flights', 'return')}
-                            min="0"
+                            value={tripData.flights.return_price} 
+                            onChange={(e) => handleInputChange(e, 'flights', 'return')} 
                         />
                     </div>
                 </div>

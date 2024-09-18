@@ -117,33 +117,77 @@ paths:
             schema:
               type: object
               properties:
-                city_name:
+                city:
                   type: string
-                  format: city_name
+                  format: city
                   example: "Lagos"
+                startDate:
+                  type: string
+                  format: date
+                  example: "10-02-2002"
+                endDate:
+                  type: string
+                  format: date
+                  example: "10-05-2002"
+                numberOfPeople:
+                  type: integer
+                  format: numberOfPeople
+                  example: 1
+                accommodation:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      format: name
+                      example: "4 Points Hotel"
+                    price:
+                      type: float
+                      format: price
+                      example: 140
+                flight:
+                  type: object
+                  properties:
+                    departure_price:
+                      type: float
+                      format: departure_price
+                      example: 140
+                    return_price:
+                      type: float
+                      format: return_price
+                      example: 140
+                transport:
+                  type: object
+                  properties:
+                    cost:
+                      type: float
+                      format: cost
+                      example: 140
+                meals:
+                  type: object
+                  properties:
+                    price:
+                      type: float
+                      format: price
+                      example: 140
+                totalBudget:
+                  type: float
+                  format: totalBudget
+                  example: 840
       responses:
         '200':
-          description: Weather condition
+          description: Trip saved successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "{weather: }"
-        '401':
-          description: Invalid credentials
+                type: string
+                example: "Trip saved successfully"
+        '500':
+          description: Error while saving
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Invalid credentials"
-
-
+                type: string
+                example: "Error while saving Trip {error message}"
   /save_place:
     post:
       summary: save details of place.

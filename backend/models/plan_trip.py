@@ -14,6 +14,9 @@ class PlanTrip(BaseModel, Base):
 	"""
 
 	__tablename__ = "plan_trips"
+
+	city = Column(String(1020), nullable=False)
+
 	start_date = Column(String(128), nullable=False)
 	end_date = Column(String(128), nullable=False)
 	number_of_people = Column(Integer, nullable=False)
@@ -29,6 +32,8 @@ class PlanTrip(BaseModel, Base):
 	meals_snack_price = Column(Float, nullable=False)
 	
 	activities_tourist_sport_price = Column(Float, nullable=False)
+
+	total_budget = Column(Float, nullable=False)
 
 	user_id = Column(String(100), ForeignKey("users.id"), nullable=False)
 
