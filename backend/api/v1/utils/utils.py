@@ -4,11 +4,10 @@ import logging
 import requests
 import urllib.parse
 from dotenv import load_dotenv
-from os import getenv, mkdir
+from os import getenv
 from api.v1.utils.ai import (
     generate_city_desc,
     generate_city_keyword,
-    generate_tourist_places,
 )
 from models.user import User
 from flask_jwt_extended import get_jwt_identity
@@ -53,77 +52,85 @@ def get_lat_lon(city_name: str) -> tuple:
     return (lat, lon)
 
 
-def get_weather_details(latitude: float, longitude: float, city: str) -> dict:
-    """get the weather details of location
+def get_place_info(latitude: float, longitude: float, city: str) -> dict:
+    """
+        Get the  details of location (weather, picture, description)
 
     Args:
-            latitude (float): the latitude of the place
-            longitude (float): the longitude of the place
+        latitude (float): the latitude of the place
+        longitude (float): the longitude of the place
+        city(str): Place
 
     Returns:
-            dict: dictionary rep of weather condition
+        Dict of information about place
     """
-    weather = {}
-    r = requests.get(
-        f"{WEATHER_URL}?lat={latitude}&lon={longitude}&appid={API_KEY}"
+    log.info(f"Getting info about {city}")
+    place_info = {}
+
+    weather_info = get_weather_info(latitude, longitude, city)
+    description = generate_city_desc(city)
+    keywords = generate_city_keyword(city)
+    picture = get_picture_of_place(city)
+
+    if (
+        weather_info is None
+        or description is None
+        or keywords is None
+        or picture is None
+    ):
+        return None
+
+    place_info["city"] = city
+    place_info["latitude"] = latitude
+    place_info["longitude"] = longitude
+    place_info["temperature"] = weather_info["temperature"]
+    place_info["weather"] = weather_info["weather"]
+    place_info["wind_speed"] = weather_info["wind_speed"]
+    place_info["humidity"] = weather_info["humidity"]
+    place_info["description"] = description
+    place_info["keywords"] = keywords
+    place_info["url_link"] = picture
+    return place_info
+
+
+def get_weather_info(latitude, longitude, city):
+    """
+        Get weather information about a place
+
+    Args:
+        latitude(float): Latitude of Place
+        longitude(float): Longitude of place
+        city(str): Place
+
+    Returns:
+        Dict of weather info
+    """
+    log.info(f"Getting weather information about {city}")
+    response = requests.get(
+        WEATHER_URL,
+        params={
+            "lat": latitude,
+            "lon": longitude,
+            "appid": API_KEY,
+        },
     )
-    data = r.json()
-    weather["temperature"] = data.get("main").get("temp")
-    weather["latitude"] = latitude
-    weather["longitude"] = longitude
-    weather["weather"] = data.get("weather")[0].get("main")
-    weather["wind_speed"] = data.get("wind").get("speed")
-    weather["humidity"] = data.get("main").get("humidity")
-    weather["description"] = generate_city_desc(city)
-    weather["keywords"] = generate_city_keyword(city)
-    return weather
+
+    if response.status_code != 200:
+        log.error(f"Unable to get weather information about {city}")
+        return None
+
+    response = response.json()
+    weather_info = {}
+    weather_info["temperature"] = response.get("main").get("temp")
+    weather_info["humidity"] = response.get("main").get("humidity")
+    weather_info["weather"] = response.get("weather")[0].get("main")
+    weather_info["wind_speed"] = response.get("wind").get("speed")
+
+    log.info(f"Got weather information about {city}")
+    return weather_info
 
 
-def get_picture_of_places(city):
-    """
-        Get the picture of places in city
-
-    Args:
-        city(str): Name of place
-
-    Returns:
-        Dict containing information and pictures
-        about places in the city
-
-    """
-    city_places = generate_tourist_places(city)
-    city = city_places["city"]
-    places = city_places["places"]
-    try:
-        assert city is not None
-        assert places is not None
-        file_path = f"{IMAGE_LOCATION}/{city}"
-        mkdir(file_path)
-    except Exception as e:
-        if isinstance(e, FileExistsError):
-            pass
-        else:
-            print(e)
-            return {"information": None}
-
-    information = {"city": city, "places": []}
-
-    log.info(f"Getting pictures of {places} in {city} using google maps")
-    for place in places:
-        information["places"].append(get_picture_of_place(city, place))
-        try:
-            assert information["places"][-1]["url_link"] is not None
-            desc = generate_city_desc(city, place)
-            information["places"][-1]["Description"] = desc
-        except Exception as e:
-            print(e)
-            log.error(f"No picture of {place} in {city}")
-            information["places"].pop()
-
-    return information
-
-
-def get_picture_of_place(city, place):
+def get_picture_of_place(city, place=None):
     """
         Get the picture of a place using the
         Google maps API and save the picture
@@ -135,25 +142,28 @@ def get_picture_of_place(city, place):
     Returns:
         Dict containing place and image name
     """
-    log.info(f"Getting picture of {place} in {city}")
+    log.info(f"Getting picture of {city}")
+
     response = requests.get(
         MAP_LOCATION_URL,
         params={
             "fields": "formatted_address,name,place_id,photos",
-            "input": f"{place} {city}",
+            "input": f"{city}",
             "inputtype": "textquery",
             "key": MAP_API_KEY,
         },
     )
 
     if response.status_code != 200:
+        log.info(f"Unable to get picture of {city}")
         return None
 
     response = response.json()
     try:
         assert response["status"] == "OK"
-    except Exception:
-        return {"Place": place, "url_link": None}
+    except Exception as e:
+        log.info(f"Unable to get picture of {city}: {e}")
+        return None
 
     photos = response["candidates"][0]["photos"]
     photo_reference = photos[0]["photo_reference"]
@@ -168,28 +178,27 @@ def get_picture_of_place(city, place):
         },
     )
 
-    file_name = f"{place.split(' ')[0]}.png"
-    save_image(city, file_name, response.content)
-    url_link = create_url_link(city, file_name)
-    log.info(f"Got picture of {place} in {city}")
+    file_name = f"{city}.png"
+    save_image(file_name, response.content)
+    url_link = create_url_link(file_name)
+    log.info(f"Got picture of {city}")
 
-    return {"Place": place, "url_link": url_link}
+    return url_link
 
 
-def save_image(dir, file_name, image_data):
+def save_image(file_name, image_data):
     """
         Save image data with file_name
 
     Args:
-        dir(str): Directory to save image
         file_name(str): Name of the image
         image_data(bytes): Image Data
     """
-    with open(f"{IMAGE_LOCATION}/{dir}/{file_name}", "wb") as image:
+    with open(f"{IMAGE_LOCATION}/{file_name}", "wb") as image:
         image.write(image_data)
 
 
-def create_url_link(dir, file_name):
+def create_url_link(file_name):
     """
         Create Url link to access image
 
@@ -200,7 +209,7 @@ def create_url_link(dir, file_name):
     Returns:
         Url link
     """
-    params = {"city": dir, "place": file_name[:-4]}
+    params = {"city": file_name[:-4]}
     query_string = urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
 
     return f"{IMAGE_URL}?{query_string}"
@@ -228,7 +237,7 @@ def save_information(place_info, file_name):
         place_info(dict): Information about Place
         file_name(str): Name of file information is saved
     """
-    with open(f"{PLACE_INFO_LOCATION}/{file_name}.json", 'w') as f:
+    with open(f"{PLACE_INFO_LOCATION}/{file_name}.json", "w") as f:
         json.dump(place_info, f)
         log.info(f"{file_name} information saved")
         return 0
@@ -250,6 +259,6 @@ def load_information(file_name):
         with open(f"{PLACE_INFO_LOCATION}/{file_name}.json") as f:
             data = json.load(f)
             return data
-    except Exception:
-        log.warning(f"No information about {file_name} yet")
+    except Exception as e:
+        log.warning(f"No information about {file_name} yet, {e}")
         return None
