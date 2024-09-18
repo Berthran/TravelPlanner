@@ -27,12 +27,14 @@ def plan_trip():
 	"""
 	data = request.get_json()
 
+	user = get_current_user()
+
 	city = data.get('city')
 	start_date = data.get("startDate")
 	end_date = data.get("endDate")
 	no_of_people = int(data.get("numberOfPeople"))
 	accommodation_name = data.get("accommodation")['name']
-	accommodation_price = float(data.ge("accommodation")['price'])
+	accommodation_price = float(data.get("accommodation")['price'])
 	flight_departure_price = float(data.get("flight")['departure_price'])
 	flight_return_price = float(data.get("flight")['return_price'])
 	transport_cost = float(data.get("transport")['cost'])
@@ -47,13 +49,15 @@ def plan_trip():
 			accommodation_price=accommodation_price, flight_departure_price=flight_departure_price,
 			flight_return_price=flight_return_price, transport_cost=transport_cost,
 			meals_snack_price=meals_snack_price, activities_tourist_sport_price=activities,
-			total_budget=total_budget
+			total_budget=total_budget, user_id=user.id
 		)
 
-		print(plan_trip)
-		return 'Trip saved successfully', 200
+		storage.new(plan_trip)
+		storage.save()
+		# print(plan_trip)
+		return jsonify('Trip saved successfully'), 200
 	except Exception as e:
-		return f'Error while saving Trip {e}', 500
+		return jsonify(f'Error while saving Trip {e}'), 500
 
 
 @app_views.route("/save_place", methods=["POST"], strict_slashes=False)

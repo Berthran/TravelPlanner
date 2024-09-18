@@ -169,10 +169,17 @@ paths:
                       type: float
                       format: price
                       example: 140
+                activities:
+                  type: object
+                  properties:
+                    price:
+                      type: float
+                      format: price
+                      example: 140
                 totalBudget:
                   type: float
                   format: totalBudget
-                  example: 840
+                  example: 980
       responses:
         '200':
           description: Trip saved successfully
