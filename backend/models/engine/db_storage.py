@@ -6,13 +6,14 @@ from models.base import Base
 from models.trip import Trip
 from models.user import User
 from models.weather import Weather
+from models.plan_trip import PlanTrip
 from os import getenv
 from dotenv import load_dotenv
 
 
 load_dotenv()
 
-classes = {"User": User, "Trip": Trip, "Weather": Weather}
+classes = {"User": User, "Trip": Trip, "Weather": Weather, "PlanTrip": PlanTrip}
 
 
 class DBStorage:

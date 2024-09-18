@@ -10,3 +10,4 @@ storage.reload()
 from models.user import User
 from models.trip import Trip
 from models.weather import Weather
+from models.plan_trip import PlanTrip
