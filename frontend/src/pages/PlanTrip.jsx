@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import "../styles/destination.scss";
 
-
 export default function PlanTrip() {
-    const { city } = useParams(); // Get the city parameter from the URL
+    const { city } = useParams();
+    const navigate = useNavigate();
     const [accommodationPrice, setAccommodationPrice] = useState(0);
     const [flightDeparturePrice, setFlightDeparturePrice] = useState(0);
     const [flightReturnPrice, setFlightReturnPrice] = useState(0);
     const [transportPrice, setTransportPrice] = useState(0);
     const [mealsPrice, setMealsPrice] = useState(0);
     const [activitiesPrice, setActivitiesPrice] = useState(0);
+    const [customCity, setCustomCity] = useState('');
 
     const calculateTotalBudget = () => {
         return (
@@ -23,9 +24,32 @@ export default function PlanTrip() {
         );
     };
 
+    const handleCustomCitySubmit = (e) => {
+        e.preventDefault();
+        if (customCity) {
+            navigate(`/planTrip/${customCity}`);
+        }
+    };
+
     return (
         <div className="plan-trip-container">
-            <h1>Start Planning Trip to {city}</h1> {/* Display the city name */}
+            {city ? (
+                <h1>Start Planning Trip to {city}</h1>
+            ) : (
+                <div>
+                    <h1>Plan Your Trip</h1>
+                    <form onSubmit={handleCustomCitySubmit}>
+                        <input 
+                            type="text" 
+                            value={customCity} 
+                            onChange={(e) => setCustomCity(e.target.value)}
+                            placeholder="Enter a city"
+                        />
+                        <button type="submit">Set City</button>
+                    </form>
+                </div>
+            )}
+            
             <div className="form-container">
                 <div className="plan-input">
                     <label>Start Date:</label>
@@ -39,7 +63,6 @@ export default function PlanTrip() {
                     <label>No of People:</label>
                     <input type="number" />
                 </div>
-
                 <div>
                     <h3>Accommodation</h3>
 
@@ -118,7 +141,7 @@ export default function PlanTrip() {
                     </div>
                 </div>
                 <div>
-                    <h2>Total Budget: {calculateTotalBudget()}</h2>
+                    <h2>Total Budget: ${calculateTotalBudget().toFixed(2)}</h2>
                 </div>
             </div>
         </div>
