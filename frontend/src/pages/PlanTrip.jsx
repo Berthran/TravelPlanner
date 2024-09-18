@@ -57,7 +57,7 @@ export default function PlanTrip() {
         }));
     };
 
-    console.log(tripData);
+    // console.log(tripData);
     const calculateTotalBudget = () => {
         const baseTotal = (
             Number.parseFloat(tripData.accommodation.price) +
