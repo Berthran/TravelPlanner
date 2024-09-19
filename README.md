@@ -11,6 +11,10 @@ Travel Planner is a handy tool to get travellers up to speed with travel prepara
 ## APIs Used
   - [OpenWeatherMap](https://openweathermap.org/)
   - [Google Gemini API](https://ai.google.dev/)
+
+https://github.com/user-attachments/assets/f5c0c628-83f3-4472-b2a9-f015f1927ed2
+
+
   - [Google Maps API](https://developers.google.com/maps/documentation)
  
   ## Contributors
