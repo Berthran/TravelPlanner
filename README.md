@@ -99,3 +99,7 @@ npm start
 - NOTE: THE ENVIRONMENT VARIABLES MUST BE SAME IN BOTH LOCATIONS .i.e
 
 @ backend/ and frontend/
+
+- to stop the docker container
+
+`sudo docker stop travel_planner_db`
