@@ -51,12 +51,17 @@ AI_KEY=AIzaSyB.... (create one from Gemini API)
 
 ## STEPS to run 
 
-- run the install script
-
+- run the install script (Not using docker)
 ```
 cd backend
 chmod +x scripts/install.sh
 ./scripts/install.sh
+```
+- run the install script (Usign docker)
+```
+cd backend
+chmod +x scripts/init_db_docker.sh
+./scripts/init_db_docker.sh
 ```
 
 - update the .env file with your WEATHER and API KEY
@@ -64,11 +69,11 @@ chmod +x scripts/install.sh
 ```
 WEATHER_KEY=befa9540 (create one from the openweathermap api -- https://home.openweathermap.org/api_keys)
 AI_KEY=AIzaSyB.... (create one from Gemini API -- https://aistudio.google.com/app/apikey)
+MAP_API_KEY=aahygee.. (create one from Google -- https://console.cloud.google.com/google/maps-apis/)
 ```
 
-The install script is expected to create a virtual environment for you and setup everything apart from the weather_key and ai_key.
+The install script is expected to create a virtual environment for you and setup everything apart from api keys.
 If this doesn't happen, you can do it manually:
-
 
 - create virtual environment
 
@@ -92,3 +97,9 @@ cat db_prep.sql | sudo mysql
 
 access swagger file at
 `/swagger`
+- run frontend
+```
+cd frontend
+npm install
+npm start
+```
