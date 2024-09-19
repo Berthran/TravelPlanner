@@ -1,13 +1,14 @@
-import React from 'react'
-import '../styles/navbar.scss'
-
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import {  FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  Link } from "react-router-dom"
-
-
+import React from 'react';
+import '../styles/navbar.scss';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, useNavigate } from "react-router-dom";
+import LogoutButton from './LogoutButton';
 
 const Navbar = () => {
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
+
 
     return (
         <div className='navContainer'>
@@ -17,8 +18,7 @@ const Navbar = () => {
 
             <input type="checkbox" id='menu-bar' />
             <label htmlFor="menu-bar">
-                <FontAwesomeIcon icon={faBars}
-                    className="icon" />
+                <FontAwesomeIcon icon={faBars} className="icon" />
             </label>
             <nav className='navbar'>
                 <ul>
@@ -39,8 +39,8 @@ const Navbar = () => {
                     </Link>
                 </ul>
             </nav>
-        </div >
-    )
-}
+        </div>
+    );
+};
 
-export default Navbar
+export default Navbar;
