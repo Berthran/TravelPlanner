@@ -28,52 +28,41 @@ https://github.com/user-attachments/assets/f5c0c628-83f3-4472-b2a9-f015f1927ed2
 
 ## EXAMPLE OF DATA EXPECTED IN THE .ENV file
 
+# DATABASE
 DB_PORT=3306
-
 DB_USER=traveller
-
 DB_PASSWORD=traveller
-
 DB_NAME=travel_planner
-
 DB_HOST=localhost
+SECRET_KEY=traveller
 
-SECRET_KEY=traveller (can be any unique key)
-
+# WEATHER PARAMS
 LOCATION_API_URL=https://api.openweathermap.org/geo/1.0/direct
-
-WEATHER_KEY=befa9540 (create one from the openweathermap api)
-
+WEATHER_KEY=?
 WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
 
-AI_KEY=AIzaSyB.... (create one from Gemini API)
+# AI KEY
+AI_KEY=?
 
+# GOOGLE MAP PARAMS
+REACT_APP_GOOGLE_MAPS_API_KEY=?
+MAP_LOCATION_URL=https://maps.googleapis.com/maps/api/place/findplacefromtext/json
+MAP_PICTURE_URL=https://maps.googleapis.com/maps/api/place/photo
+MAP_API_KEY=?
+
+# APP
+IMAGE_URL=http://127.0.0.1:5000/api/v1/get_image
+IMAGE_LOCATION=api/v1/images
+PLACE_INFO_LOCATION=api/v1/place_info
 
 ## STEPS to run 
 
-- run the install script (Not using docker)
+- run the install script (Not using docker) [terminal 0]
 ```
 cd backend
-chmod +x scripts/install.sh
-./scripts/install.sh
+chmod +x scripts/.init_db_docker.sh
+sudo scripts/.init_db_docker.sh
 ```
-- run the install script (Usign docker)
-```
-cd backend
-chmod +x scripts/init_db_docker.sh
-./scripts/init_db_docker.sh
-```
-
-- update the .env file with your WEATHER and API KEY
-
-```
-WEATHER_KEY=befa9540 (create one from the openweathermap api -- https://home.openweathermap.org/api_keys)
-AI_KEY=AIzaSyB.... (create one from Gemini API -- https://aistudio.google.com/app/apikey)
-MAP_API_KEY=aahygee.. (create one from Google -- https://console.cloud.google.com/google/maps-apis/)
-```
-
-The install script is expected to create a virtual environment for you and setup everything apart from api keys.
-If this doesn't happen, you can do it manually:
 
 - create virtual environment
 
@@ -84,22 +73,29 @@ If this doesn't happen, you can do it manually:
 `pip3 install -r requirements.txt`
 
 - setup up your .env keys
-- setup database, run:
-
-```
-sudo service mysql start
-cat db_prep.sql | sudo mysql
-```
 
 - run code
 
-`python3 -m backend.api.v1.app`
+`python3 -m api.v1.app`
 
-access swagger file at
+- access swagger file at for testing api endpoints, if necessary
+
 `/swagger`
-- run frontend
+
+
+- run frontend [terminal 1]
+
+- Be sure to have the environment variable also present in the frontend directory
+
+- start the program
+
 ```
 cd frontend
 npm install
 npm start
 ```
+
+
+- NOTE: THE ENVIRONMENT VARIABLES MUST BE SAME IN BOTH LOCATIONS .i.e
+
+@ backend/ and frontend/
