@@ -22,7 +22,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className='bg-blue-400'>
+    <div className="dashboard">
       <Navbar />
       <div className="dashboard-wrapper">
 
