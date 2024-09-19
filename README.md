@@ -30,7 +30,7 @@ https://github.com/user-attachments/assets/f5c0c628-83f3-4472-b2a9-f015f1927ed2
 
 
 ## EXAMPLE OF DATA EXPECTED IN THE .ENV file
-
+```
 # DATABASE
 
 DB_PORT=3306
@@ -46,23 +46,35 @@ DB_HOST=localhost
 SECRET_KEY=traveller
 
 # WEATHER PARAMS
+
 LOCATION_API_URL=https://api.openweathermap.org/geo/1.0/direct
+
 WEATHER_KEY=?
+
 WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
 
 # AI KEY
+
 AI_KEY=?
 
 # GOOGLE MAP PARAMS
+
 REACT_APP_GOOGLE_MAPS_API_KEY=?
+
 MAP_LOCATION_URL=https://maps.googleapis.com/maps/api/place/findplacefromtext/json
+
 MAP_PICTURE_URL=https://maps.googleapis.com/maps/api/place/photo
+
 MAP_API_KEY=?
 
 # APP
+
 IMAGE_URL=http://127.0.0.1:5000/api/v1/get_image
+
 IMAGE_LOCATION=api/v1/images
+
 PLACE_INFO_LOCATION=api/v1/place_info
+```
 
 ## STEPS to run 
 
