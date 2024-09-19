@@ -1,13 +1,13 @@
 import React from 'react';
 import '../styles/navbar.scss';
+
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
-import LogoutButton from './LogoutButton';
+import { Link } from "react-router-dom";
+
+
 
 const Navbar = () => {
-    const token = localStorage.getItem('token');
-    const navigate = useNavigate();
 
 
     return (

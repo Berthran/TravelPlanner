@@ -42,9 +42,7 @@ function App() {
                 <Route
                     path="/destination/:city"
                     element={
-                        <ProtectedRoute>
                             <Destination />
-                        </ProtectedRoute>
                     }
                 />
             </Routes>
