@@ -13,7 +13,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-classes = {"User": User, "Trip": Trip, "Weather": Weather, "PlanTrip": PlanTrip}
+classes = {
+    "User": User,
+    "Trip": Trip,
+    "Weather": Weather,
+    "PlanTrip": PlanTrip,
+}
 
 
 class DBStorage:

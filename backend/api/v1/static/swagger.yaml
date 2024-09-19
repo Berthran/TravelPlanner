@@ -119,66 +119,63 @@ paths:
               properties:
                 city:
                   type: string
-                  format: city
                   example: "Lagos"
                 startDate:
                   type: string
-                  format: date
                   example: "10-02-2002"
                 endDate:
                   type: string
-                  format: date
                   example: "10-05-2002"
                 numberOfPeople:
-                  type: integer
-                  format: numberOfPeople
-                  example: 1
+                  type: object
+                  properties:
+                    number:
+                      type: int
+                      example: 1
                 accommodation:
                   type: object
                   properties:
                     name:
                       type: string
-                      format: name
                       example: "4 Points Hotel"
                     price:
                       type: float
-                      format: price
                       example: 140
-                flight:
+                flights:
                   type: object
                   properties:
-                    departure_price:
-                      type: float
-                      format: departure_price
-                      example: 140
-                    return_price:
-                      type: float
-                      format: return_price
-                      example: 140
+                    departure:
+                      type: object
+                      properties:
+                        price:
+                          type: float
+                          example: 140
+                    return:
+                      type: object
+                      properties:
+                        price:
+                          type: float
+                          example: 140
                 transport:
                   type: object
                   properties:
                     cost:
                       type: float
-                      format: cost
                       example: 140
                 meals:
                   type: object
                   properties:
                     price:
                       type: float
-                      format: price
                       example: 140
                 activities:
                   type: object
                   properties:
                     price:
                       type: float
-                      format: price
                       example: 140
                 totalBudget:
                   type: float
-                  format: totalBudget
                   example: 980
       responses:
         '200':
@@ -208,7 +205,6 @@ paths:
               properties:
                 city:
                   type: string
-                  format: city_name
                   example: "Lagos"
       responses:
         '200':

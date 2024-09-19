@@ -78,14 +78,16 @@ export default function PlanTrip() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitting(true);
+        setSubmitting(false);
         setError(null);
-
+        
+        const token = localStorage.getItem("token");
         try {
             const response = await fetch('http://127.0.0.1:5000/api/v1/plan_trip', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     city: city || customCity,
@@ -100,10 +102,11 @@ export default function PlanTrip() {
             //eslint-disable-next-line
             const result = await response.json();
             alert('Trip plan saved successfully!');
+            window.location.href = "/";
         } catch (err) {
             setError(err.message);
         } finally {
-            setSubmitting(false);
+            setSubmitting(true);
         }
     };
 
@@ -166,6 +169,7 @@ export default function PlanTrip() {
                             name="name"
                             value={tripData.accommodation.name}
                             onChange={(e) => handleInputChange(e, 'accommodation')}
+                            required
                         />
                     </div>
                     <div className="plan-input">

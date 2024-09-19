@@ -8,80 +8,80 @@ from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
-	"""User model
+    """User model
 
-	Args:
-			BaseModel (class): the base model of class
-			Base (declarative base): the table model
-	"""
+    Args:
+                    BaseModel (class): the base model of class
+                    Base (declarative base): the table model
+    """
 
-	__tablename__ = "users"
-	username = Column(String(128), nullable=False)
-	__password = Column("password", String(1024), nullable=False)
-	__email = Column("email", String(128), nullable=False)
+    __tablename__ = "users"
+    username = Column(String(128), nullable=False)
+    __password = Column("password", String(1024), nullable=False)
+    __email = Column("email", String(128), nullable=False)
 
-	trips = relationship("Trip", back_populates="user")
+    trips = relationship("Trip", back_populates="user")
 
-	plan_trips = relationship("PlanTrip", back_populates="plan_trips")
-	
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		if kwargs:
-			for key, value in kwargs.items():
-				if key != "__class__" and hasattr(self, key):
-					setattr(self, key, value)
+    plan_trips = relationship("PlanTrip", back_populates="plan_trips")
 
-	@property
-	def password(self):
-		"""Retrieves the users password"""
-		return self.__password
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__" and hasattr(self, key):
+                    setattr(self, key, value)
 
-	@password.setter
-	def password(self, value: str):
-		"""Set new password of user
+    @property
+    def password(self):
+        """Retrieves the users password"""
+        return self.__password
 
-		Args:
-				value (str): the new password of user
-		"""
-		self.__password = generate_password_hash(value)
+    @password.setter
+    def password(self, value: str):
+        """Set new password of user
 
-	def check_password(self, password):
-		"""Validate user's password
+        Args:
+                        value (str): the new password of user
+        """
+        self.__password = generate_password_hash(value)
 
-		Args:
-				password (hashed_password): the password to check
+    def check_password(self, password):
+        """Validate user's password
 
-		Returns:
-				bool: True | False
-		"""
-		return check_password_hash(self.__password, password)
+        Args:
+                        password (hashed_password): the password to check
 
-	@property
-	def email(self):
-		"""Retrieves user email"""
-		return self.__email
+        Returns:
+                        bool: True | False
+        """
+        return check_password_hash(self.__password, password)
 
-	@email.setter
-	def email(self, value: str):
-		"""Sets email of user
+    @property
+    def email(self):
+        """Retrieves user email"""
+        return self.__email
 
-		Args:
-				value (str): the new email
+    @email.setter
+    def email(self, value: str):
+        """Sets email of user
 
-		Raises:
-				ValueError: Invalid email
-		"""
-		regex = r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$"
-		if re.match(regex, value):
-			self.__email = value
-		else:
-			raise ValueError("Invalid Email")
+        Args:
+                        value (str): the new email
 
-	def to_dict(self):
-		"""Dictionary repr of password with password removed"""
-		dictionary = super().to_dict()
-		if "_User__email" in dictionary:
-			dictionary["email"] = dictionary["_User__email"]
-			del dictionary["_User__email"]
-		del dictionary["_User__password"]
-		return dictionary
+        Raises:
+                        ValueError: Invalid email
+        """
+        regex = r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$"
+        if re.match(regex, value):
+            self.__email = value
+        else:
+            raise ValueError("Invalid Email")
+
+    def to_dict(self):
+        """Dictionary repr of password with password removed"""
+        dictionary = super().to_dict()
+        if "_User__email" in dictionary:
+            dictionary["email"] = dictionary["_User__email"]
+            del dictionary["_User__email"]
+        del dictionary["_User__password"]
+        return dictionary

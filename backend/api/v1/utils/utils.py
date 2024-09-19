@@ -46,11 +46,7 @@ def get_lat_lon(city_name: str) -> tuple:
     """
     log.info(f"Getting coordinates of {city_name}")
     response = requests.get(
-            LOCATION_URL,
-            params={
-                "q": city_name,
-                "appid": API_KEY
-                }
+        LOCATION_URL, params={"q": city_name, "appid": API_KEY}
     )
     if response.status_code != 200:
         log.error(f"Unable to get coordinates of {city_name}: {response}")
