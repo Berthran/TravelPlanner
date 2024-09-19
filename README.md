@@ -11,16 +11,19 @@ Travel Planner is a handy tool to get travellers up to speed with travel prepara
 ## APIs Used
   - [OpenWeatherMap](https://openweathermap.org/)
   - [Google Gemini API](https://ai.google.dev/)
+  - [Google Maps API](https://developers.google.com/maps/documentation)
+
+### MVP DEMO
 
 https://github.com/user-attachments/assets/f5c0c628-83f3-4472-b2a9-f015f1927ed2
 
 
-  - [Google Maps API](https://developers.google.com/maps/documentation)
+  
  
   ## Contributors
   - Daniel Berthran
   - Felsi Vasitha
-  - Wiseman Umanah
+  - Wiseman Umanah <wisemanumanah@gmail.com>
   - Gilbert Henyo <kofidaba@gmail.com>
   - Castro Omondi
   - Oluwamayowa Musa
@@ -29,11 +32,17 @@ https://github.com/user-attachments/assets/f5c0c628-83f3-4472-b2a9-f015f1927ed2
 ## EXAMPLE OF DATA EXPECTED IN THE .ENV file
 
 # DATABASE
+
 DB_PORT=3306
+
 DB_USER=traveller
+
 DB_PASSWORD=traveller
+
 DB_NAME=travel_planner
+
 DB_HOST=localhost
+
 SECRET_KEY=traveller
 
 # WEATHER PARAMS
@@ -103,3 +112,16 @@ npm start
 - to stop the docker container
 
 `sudo docker stop travel_planner_db`
+
+- if any issue is found, something similar to this in [ terminal 0 ]
+
+![Screenshot from 2024-09-19 11-20-17](https://github.com/user-attachments/assets/e69859e3-9b99-4752-8bcf-993605630fdf)
+
+- stop the docker container, be sure to edit this line in the init_db_docker.sh to fit the ip address circled (your ip address might be different)
+
+![Screenshot from 2024-09-19 11-20-43](https://github.com/user-attachments/assets/b2641cb3-6c09-428a-83e6-4d3e1480a812)
+
+- run the docker script again 
+
+`sudo scripts/.init_db_docker.sh`
+
