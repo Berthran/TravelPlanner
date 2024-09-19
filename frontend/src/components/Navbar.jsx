@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/navbar.scss';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import LogoutButton from "./LogoutButton"
 
 
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
 
 
     return (
@@ -31,9 +41,16 @@ const Navbar = () => {
                     <Link to="/planTrip">
                         <li><p>Plan Trip</p></li>
                     </Link>
-                    <Link to="/login">
-                        <li><p>Login</p></li>
-                    </Link>
+                    {isLoggedIn ? (
+                            <li>
+                                <p><LogoutButton /></p>
+                            </li>
+                    ) : (
+                        <Link to="/login">
+                            <li><p>Login</p></li>
+                        </Link>
+                            
+                    )} 
                     <Link to="/register">
                         <li><p>Register</p></li>
                     </Link>
