@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """Database Storage Engine"""
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base import Base
-from models.trip import Trip
+from models.place import Place
 from models.user import User
 from models.weather import Weather
 from models.plan_trip import PlanTrip
@@ -15,7 +15,7 @@ load_dotenv()
 
 classes = {
     "User": User,
-    "Trip": Trip,
+    "Place": Place,
     "Weather": Weather,
     "PlanTrip": PlanTrip,
 }
@@ -70,6 +70,25 @@ class DBStorage:
                     }
                 )
             return all_objects
+
+    def all_trips_user(self, id):
+        """
+            Retrieves all data<cls> based on the user id
+
+        Args:
+            user_id(str): Id of user
+            cls(Object): Data required
+
+        Returns:
+            dict of all objects retrieved
+        """
+        return {
+            f"{obj.__class__.__name__}.{obj.id}": obj
+            for obj in self.__session.query(PlanTrip)
+            .filter_by(user_id=id)
+            .order_by(desc(PlanTrip.start_date))
+            .all()
+        }
 
     def new(self, obj):
         """Adds an object to db
@@ -128,3 +147,13 @@ class DBStorage:
         if cls in classes.values():
             return self.__session.query(cls).filter_by(id=id).first()
         return None
+
+    def get_place(self, city):
+        """
+            Returns the Object place which contains information
+            about place
+
+        Args:
+            city(str): Name of city
+        """
+        return self.__session.query(Place).filter_by(city=city).first()

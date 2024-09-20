@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import json
 import logging
 import requests
 import urllib.parse
@@ -9,9 +8,9 @@ from api.v1.utils.ai import (
     generate_city_desc,
     generate_city_keyword,
 )
-from models.user import User
+from models import User
 from flask_jwt_extended import get_jwt_identity
-from models import storage
+from models import storage, weather_memory
 
 load_dotenv()
 log = logging.getLogger()
@@ -63,13 +62,11 @@ def get_lat_lon(city_name: str) -> tuple:
         return None
 
 
-def get_place_info(latitude: float, longitude: float, city: str) -> dict:
+def get_place_info(city: str) -> dict:
     """
         Get the  details of location (weather, picture, description)
 
     Args:
-        latitude (float): the latitude of the place
-        longitude (float): the longitude of the place
         city(str): Place
 
     Returns:
@@ -77,11 +74,15 @@ def get_place_info(latitude: float, longitude: float, city: str) -> dict:
     """
     log.info(f"Getting info about {city}")
     place_info = {}
-
+    coordinates = get_lat_lon(city)
+    if coordinates is None:
+        return None
+    latitude = coordinates["lat"]
+    longitude = coordinates["lon"]
+    picture = get_picture_of_place(city)
     weather_info = get_weather_info(latitude, longitude, city)
     description = generate_city_desc(city)
     keywords = generate_city_keyword(city)
-    picture = get_picture_of_place(city)
 
     if (
         weather_info is None
@@ -117,6 +118,11 @@ def get_weather_info(latitude, longitude, city):
         Dict of weather info
     """
     log.info(f"Getting weather information about {city}")
+
+    weather_info = weather_memory.get_info(city)
+    if weather_info is not None:
+        return weather_info
+
     response = requests.get(
         WEATHER_URL,
         params={
@@ -140,6 +146,9 @@ def get_weather_info(latitude, longitude, city):
     weather_info["wind_speed"] = response.get("wind").get("speed")
 
     log.info(f"Got weather information about {city}")
+
+    weather_memory.store_info(city, weather_info, 600)
+
     return weather_info
 
 
@@ -242,36 +251,26 @@ def get_current_user():
     return None
 
 
-def save_information(place_info, file_name):
-    """
-        Save place information
-
-    Args:
-        place_info(dict): Information about Place
-        file_name(str): Name of file information is saved
-    """
-    with open(f"{PLACE_INFO_LOCATION}/{file_name}.json", "w") as f:
-        json.dump(place_info, f)
-        log.info(f"{file_name} information saved")
-        return 0
-
-    return -1
-
-
-def load_information(file_name):
+def load_information(place):
     """
         Load information about place
 
     Args:
-        file_name(str): Name of file
+        place(str): Name of place
 
     Returns:
         data if present else None
     """
     try:
-        with open(f"{PLACE_INFO_LOCATION}/{file_name}.json") as f:
-            data = json.load(f)
-            return data
+        place = storage.get_place(place)
+        assert place is not None
+        weather_info = get_weather_info(
+            place.latitude, place.longitude, place.city
+        )
+        place_info = place.to_dict()
+        place_info.update(weather_info)
+
+        return place_info
     except Exception as e:
-        log.warning(f"No information about {file_name} yet, {e}")
+        log.warning(f"No information about {place} yet, {e}")
         return None

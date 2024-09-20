@@ -2,16 +2,14 @@
 """Module handles all authentications"""
 import logging
 from api.v1.views import app_views
-from models.trip import Trip
-from models.weather import Weather
-from models.plan_trip import PlanTrip
+from models import Place
+from models import PlanTrip
 from models import storage
 from flask import jsonify, request
 from api.v1.utils.utils import (
-    get_lat_lon,
+    get_weather_info,
     get_place_info,
     get_current_user,
-    save_information,
     load_information,
 )
 from flask_jwt_extended import jwt_required
@@ -83,21 +81,30 @@ def save_place():
     log.info(f"Saving info about {city_name}")
 
     try:
-        coordinates = get_lat_lon(city_name)
-        assert coordinates is not None
-        lat = coordinates["lat"]
-        lon = coordinates["lon"]
-        place_info = get_place_info(lat, lon, city_name)
-        assert place_info is not None
-        status = save_information(place_info, city_name)
-        assert status == 0
-        return (
-            jsonify({"message": "Information saved"}),
-            200,
-        )
+        place = storage.get_place(city_name)
+        match place:
+            case None:
+                place_info = get_place_info(city_name)
+                assert place_info is not None
+                place = Place(
+                    city=city_name,
+                    latitude=place_info["latitude"],
+                    longitude=place_info["longitude"],
+                    description=place_info["description"],
+                    keywords=place_info["keywords"],
+                    url_link=place_info["url_link"],
+                )
+                place.save()
+                log.info(f"{city_name} information saved")
+            case _:
+                latitude = place.latitude
+                longitude = place.longitude
+                get_weather_info(latitude, longitude, city_name)
+
+        return jsonify({"mesage": "Information saved"}), 200
     except Exception as e:
         log.error(f"Unable to save information about {city_name}: {e}")
-        return (jsonify({"mesage": "Unable to get information"}), 500)
+        return (jsonify({"mesage": "Unable to save information"}), 500)
 
 
 @app_views.route("/load_place", methods=["GET"], strict_slashes=False)
@@ -125,27 +132,35 @@ def dashboard():
                     as of when user made request
     """
     user = get_current_user()
+    log.info(f"Getting all the planned trips of {user.username}")
 
-    trips = storage.all(Trip).values()
-    weathers = storage.all(Weather).values()
+    try:
+        planned_trips = storage.all_trips_user(user.id)
+        match planned_trips:
+            case None:
+                return (
+                    jsonify(
+                        {"error": "No user trip found, try creating a trip"},
+                        status=404,
+                    ),
+                )
+            case _:
+                planned_trips = planned_trips.values()
+                places = [planned_trip.city for planned_trip in planned_trips]
+                places_info = [
+                    storage.get_place(place).to_dict() for place in places
+                ]
+                [
+                    place_info.update(
+                        get_weather_info(
+                            place_info["latitude"],
+                            place_info["longitude"],
+                            place_info["city"],
+                        )
+                    )
+                    for place_info in places_info
+                ]
+                return jsonify(places_info), 200
 
-    list_trip = []
-
-    if not trips:
-        return (
-            jsonify({"error": "No user trip found, try creating a trip"}),
-            404,
-        )
-
-    for t in trips:
-        if t.user_id == user.id:
-            trip_data = t.to_dict()
-            trip_data["weather"] = None
-
-            for w in weathers:
-                if w.trip_id == t.id:
-                    trip_data["weather"] = w.to_dict()
-                    break
-            list_trip.append(trip_data)
-
-    return jsonify(list_trip), 200
+    except Exception as e:
+        log.error(f"Unable to get planned trips of {user.username}: {e}")

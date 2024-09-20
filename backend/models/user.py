@@ -3,7 +3,7 @@
 from models.base import BaseModel, Base
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 
@@ -19,8 +19,6 @@ class User(BaseModel, Base):
     username = Column(String(128), nullable=False)
     __password = Column("password", String(1024), nullable=False)
     __email = Column("email", String(128), nullable=False)
-
-    trips = relationship("Trip", back_populates="user")
 
     plan_trips = relationship("PlanTrip", back_populates="plan_trips")
 

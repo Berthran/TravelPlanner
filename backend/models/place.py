@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 """Trip Model to handle users"""
 from models.base import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Float
 
 
-class Trip(BaseModel, Base):
+class Place(BaseModel, Base):
     """Trip model
 
     Args:
@@ -13,17 +12,13 @@ class Trip(BaseModel, Base):
             Base (declarative base): the table model
     """
 
-    __tablename__ = "trips"
-    city_name = Column(String(128), nullable=False)
+    __tablename__ = "places"
+    city = Column(String(128), nullable=False)
     latitude = Column(Float)
     longitude = Column(Float)
     description = Column(String(2040))
     keywords = Column(String(500))
-    user_id = Column(String(100), ForeignKey("users.id"), nullable=False)
-
-    user = relationship("User", back_populates="trips")
-
-    weathers = relationship("Weather", back_populates="trip")
+    url_link = Column(String(128))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -10,6 +10,13 @@ if ! [ -x "$(command -v docker)" ]; then
 	exit 1
 fi
 
+# Redis
+# Check if the REDIS_SERVER_PORT has been set, Otherwise default to `6379`
+REDIS_SERVER_PORT=${REDIS_SERVER_PORT:=6379}
+# Check if the REDIS_INSIGHT_PORT has been set, Otherwise default to `8001`
+REDIS_INSIGHT_PORT=${REDIS_INSIGHT_PORT:=8001}
+
+# Database
 # Check if  a custom user has been set, Otherwise default to `traveller`
 DB_USER=${MYSQL_USER:=traveller}
 # Check if a custom password has been set, Otherwise default to `traveller`
@@ -44,6 +51,24 @@ until docker exec travel_planner_db mysql -h "${DB_HOST}" --password="${DB_PASSW
 	sleep 1
 done
 
+# Allow to skip redis if a dockerized redis memory is already running
+if [[ -z "${SKIP_REDIS}" ]]
+then
+	# Run image
+	docker run \
+		--rm --name travel_planner_memory \
+		-p "${REDIS_SERVER_PORT}":6379 \
+		-p "${REDIS_INSIGHT_PORT}":8001 \
+		-d redis/redis-stack
+	echo "Redis memory running!!!"
+fi
+
+# Keep Pinging redis until it's ready to accept commands
+until docker exec travel_planner_memory redis-cli --version; do
+	>&2 echo "redis is still unavailable --sleeping"
+	sleep 1
+done
+
 # Prepare user
 docker exec travel_planner_db mysql \
 	-h "${DB_HOST}" \
@@ -61,4 +86,5 @@ docker exec travel_planner_db mysql \
 	--password="${DB_PASSWORD}" \
 	-e "FLUSH PRIVILEGES;"
 
+echo "Redis is ready to go"
 echo "mysql has migrate, ready to go"

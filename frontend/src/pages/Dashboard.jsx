@@ -9,16 +9,21 @@ const Dashboard = () => {
   const [cityPlaces, setCityPlaces] = useState([]);
   const [message, setMessage] = useState({});
 
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/api/v1/trip`)
+    axios.get('http://127.0.0.1:5000/api/v1/dashboard', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(response => {
-        setCityPlaces(response.data.city_places.places);
-        setMessage(response.data.message);
+        setCityPlaces(response.data);
+        setMessage(response.data[0]);
       })
       .catch(error => {
         console.error("There was an error fetching the data!", error);
       });
-  }, []);
+  }, [token]);
 
 
   return (
@@ -32,10 +37,10 @@ const Dashboard = () => {
             <h1>Planned Trips</h1>
             {cityPlaces.map((place, index) => (
               <div className="trip-container" key={index}>
-                <img src={place.url_link} alt={place.Place} />
+                <img src={place.url_link} alt={place.city} />
                 <div className="details">
-                  <h3>{place.Place}</h3>
-                  <p>{place.Description}</p>
+                  <h3>{place.city}</h3>
+                  <p>{place.description}</p>
                 </div>
               </div>
             ))}
@@ -73,7 +78,7 @@ const Dashboard = () => {
         <div className="lowerContent">
           <div className="side">
             <h1>Upcoming Tour</h1>
-            <p>{message.description}</p>
+            <p>{message.city}</p>
             <img src={cityPlaces.length > 0 ? cityPlaces[0].url_link : ''} alt="Upcoming Tour" />
           </div>
           <div className="side">
