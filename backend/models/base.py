@@ -52,7 +52,7 @@ class BaseModel(Base):
         return "[{}] ({}) {}".format(classname, self.id, self.to_dict())
 
     def save(self):
-        from backend.models import storage
+        from models import storage
 
         self.updated_at = datetime.utcnow()
         storage.new(self)

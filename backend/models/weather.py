@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """Weather Model to handle users"""
 from models.base import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Float
 
 
 class Weather(BaseModel, Base):
@@ -18,10 +17,6 @@ class Weather(BaseModel, Base):
     weather_condition = Column(String(128), nullable=False)
     wind_speed = Column(Float, nullable=False)
     humidity = Column(Float, nullable=False)
-
-    trip_id = Column(String(100), ForeignKey("trips.id"), nullable=False)
-
-    trip = relationship("Trip", back_populates="weathers")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

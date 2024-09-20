@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Module handles all authentications"""
 from api.v1.views import app_views
-from models.user import User
+from models import User
 from models import storage
 
 from flask import jsonify, request
